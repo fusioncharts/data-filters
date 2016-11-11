@@ -76,7 +76,7 @@ class FilterVisual {
         label = self.createElements('label', {
           'for': 'fc_ext_filter_cat_' + catName
         });
-        label.innerHTML = catName;
+        label.innerHTML = catName.toUpperCase();
         header.appendChild(label);
 
         cardBody = self.createElements('div', {
@@ -107,7 +107,7 @@ class FilterVisual {
             label = self.createElements('label', {
               'for': 'fc_ext_filter_item_' + itemVal
             });
-            label.innerHTML = itemVal;
+            label.innerHTML = itemVal.toUpperCase();
             li.appendChild(label);
           }
         }
