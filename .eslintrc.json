@@ -7,8 +7,9 @@
     "globals": {
     	"FusionCharts": true,
     	"GrowthAnalyser": true,
-        "MultiChart": true,
-        "FCDataFilterExt": true
+        "MultiCharting": true,
+        "FCDataFilterExt": true,
+        "FilterVisual": true
     },
     "rules": {
     	"one-var": ["error", "always"],

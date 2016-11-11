@@ -1,10 +1,9 @@
 class FCDataFilterExt {
   constructor () {
-    var multiChart = new MultiChart();
+    var multiChart = new MultiCharting();
     this.datastore = multiChart.createDataStore();
-    this.dataProcessor = multiChart.createDataProcessor();
     // setting demo data
-    this.datastore.setData({
+    this.demoData = {
       dataSource: [{
         product: 'tea',
         sale: '45',
@@ -15,7 +14,20 @@ class FCDataFilterExt {
         sale: '45',
         year: 2016
       }]
-    });
+    };
+    this.datastore.setData(this.demoData);
     // data set
   }
+
+  getConfigFromData () {
+    var config = {};
+
+    if (!this.datastore) {
+      return;
+    }
+  }
+
+  updateConfig (config) {
+  }
 }
+window.FCDataFilterExt = FCDataFilterExt;
