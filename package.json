@@ -1,0 +1,54 @@
+{
+  "name": "Data-Filter-Ext-TS",
+  "version": "0.0.1",
+  "description": "Data Filter Extension for TimeSeries",
+  "main": "constructor.js",
+  "scripts": {
+    "jsunit": "gulp test",
+    "build": "gulp build",
+    "docs": "gulp docs",
+    "test": "gulp"
+  },
+  "repository": {
+    "url": "",
+    "type": "git"
+  },
+  "keywords": [
+  ],
+  "author": "Pratyush",
+  "license": "MIT",
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
+  "devDependencies": {
+    "babel-loader": "^6.2.5",
+    "babel-preset-latest": "^6.16.0",
+    "chai": "^3.5.0",
+    "del": "^2.2.2",
+    "docdash": "^0.4.0",
+    "eslint": "^3.8.1",
+    "eslint-config-google": "^0.7.0",
+    "eslint-config-standard": "^6.2.0",
+    "eslint-plugin-promise": "^3.3.0",
+    "eslint-plugin-standard": "^2.0.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-eslint": "^3.0.1",
+    "gulp-istanbul": "^1.1.1",
+    "gulp-mocha": "^3.0.1",
+    "gulp-prettydiff": "^1.0.1",
+    "gulp-sourcemaps": "^2.1.1",
+    "gulp-uglify": "^2.0.0",
+    "jsdoc": "^3.4.2",
+    "mocha": "^3.1.2",
+    "through2": "^2.0.1",
+    "vinyl-named": "^1.1.0",
+    "webpack": "^1.13.2",
+    "webpack-stream": "^3.2.0"
+  },
+  "dependencies": {
+    "gulp-concat": "^2.6.0",
+    "gulp-iife": "^0.3.0"
+  }
+}
