@@ -90,7 +90,7 @@ _gulp2.default.task('clean:dist', ['test'], function () {
 });
 
 _gulp2.default.task('build-es5', ['clean:dist'], function () {
-  return _gulp2.default.src(PATH.allSrcJs).pipe((0, _gulpConcat2.default)('canvaslite-es6.min.js')).pipe(_gulpSourcemaps2.default.init({ 'loadMaps': true })).pipe(_through2.default.obj(function (file, enc, cb) {
+  return _gulp2.default.src(PATH.allSrcJs).pipe((0, _gulpConcat2.default)('data-filter-es6.min.js')).pipe(_gulpSourcemaps2.default.init({ 'loadMaps': true })).pipe(_through2.default.obj(function (file, enc, cb) {
     var isSourceMap = /\.map$/.test(file.path);
     if (!isSourceMap) {
       this.push(file);
@@ -103,7 +103,7 @@ _gulp2.default.task('build-es5', ['clean:dist'], function () {
 });
 
 _gulp2.default.task('build', ['clean:dist'], function () {
-  return _gulp2.default.src(PATH.allSrcJs).pipe((0, _gulpConcat2.default)('canvaslite-es6.min.js')).pipe((0, _gulpIife2.default)({
+  return _gulp2.default.src(PATH.allSrcJs).pipe((0, _gulpConcat2.default)('data-filter-es6.min.js')).pipe((0, _gulpIife2.default)({
     useStrict: true,
     prependSemicolon: false,
     params: ['window', 'document', 'undefined'],

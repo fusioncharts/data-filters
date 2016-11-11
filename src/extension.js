@@ -1,8 +1,6 @@
-{
-  class FCDataFilterExt {
-    constructor (datastore, DataProcessor) {
-      this.dataprocessor = datastore;
-      this.DataProcessor = DataProcessor;
-    }
+class FCDataFilterExt {
+  constructor () {
+    var multiChart = new MultiChart();
+    this.datastore = multiChart.createDataStore();
   }
 }

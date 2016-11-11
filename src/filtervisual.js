@@ -1,4 +1,2 @@
-{
-  class FilterVisual {
-  }
+class FilterVisual {
 }
