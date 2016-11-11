@@ -29,6 +29,36 @@ class FCDataFilterExt {
         sale: '90',
         state: 'orissa',
         year: 2016
+      },
+      {
+        product: 'tea',
+        sale: '190',
+        state: 'bihar',
+        year: 2010
+      },
+      {
+        product: 'coffee',
+        sale: '120',
+        state: 'bengal',
+        year: 2012
+      },
+      {
+        product: 'espresso',
+        sale: '200',
+        state: 'orissa',
+        year: 2012
+      },
+      {
+        product: 'latte',
+        sale: '50',
+        state: 'bihar',
+        year: 2013
+      },
+      {
+        product: 'cappuccino',
+        sale: '100',
+        state: 'orissa',
+        year: 2015
       }]
     };
     this.datastore.setData(this.demoData);
