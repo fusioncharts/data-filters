@@ -33,6 +33,7 @@ class FCDataFilterExt {
     };
     this.datastore.setData(this.demoData);
     this.displayConfig = this.createMenuConfigFromData();
+    this.filterVisual = new FilterVisual(this.displayConfig, 'filter-parent', this);
     // data set
   }
 
@@ -85,7 +86,6 @@ class FCDataFilterExt {
         } // end for j
       } // end if
     } // end for i
-    console.log(blockList);
     return blockList;
   } // end function
 
@@ -94,8 +94,10 @@ class FCDataFilterExt {
   * apply has been clicked in ui
   */
   apply (config) {
+    console.log('Before change', JSON.stringify(this.datastore.getJSON(), null, 4));
     var dataprocessor = this.multiChart.createDataProcessor();
-    console.log(this.datastore.getData(this.createFilter(config)));
+    dataprocessor.filter(this.createFilter(config));
+    console.log('After change', JSON.stringify(this.datastore.getData(dataprocessor).getJSON(), null, 4));
   }
 
   createFilter (_config) {
@@ -105,7 +107,7 @@ class FCDataFilterExt {
       var key;
       for (key in object) {
         if (blockList.indexOf(key + object[key]) !== -1) {
-          delete object[key];
+          return;
         }
       }
       return object;
