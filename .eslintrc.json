@@ -6,7 +6,9 @@
     ],
     "globals": {
     	"FusionCharts": true,
-    	"GrowthAnalyser": true
+    	"GrowthAnalyser": true,
+        "MultiChart": true,
+        "FCDataFilterExt": true
     },
     "rules": {
     	"one-var": ["error", "always"],
