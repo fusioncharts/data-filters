@@ -5,56 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title></title>
-    <style type="text/css">
-      .fc_ext_filter_cont section {
-        box-sizing: border-box;
-        width: 100%;
-        padding: 16px 16px 8px 16px;
-      }
-
-      .fc_ext_filter_card {
-        border: 1px solid black;
-
-      }
-
-      .fc_ext_filter_card header {
-        padding: 5px;
-        background-color: black;
-        color: white;
-      }
-
-      .fc_ext_filter_card-body {
-        border-top: 1px solid black;
-      }
-
-      .fc_ext_filter_card-body ul {
-        list-style: none;
-        margin:0;
-        padding: 0;
-      }
-
-      .fc_ext_filter_card-body ul li {
-        margin: 5px;
-      }
-
-      .fc_ext_filter_cont::-webkit-scrollbar {
-        -webkit-appearance: none;
-        width: 5px;
-      }
-      .fc_ext_filter_cont::-webkit-scrollbar-thumb {
-        border-radius: 4px;
-        background-color: rgba(0, 0, 0, .5);
-        -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="lib/css/styles.css">
   </head>
   <body>
     <div id="chart-container"></div>
-    <script src="lib/fusioncharts.js"></script>
-    <script src="lib/fusioncharts.multicharting.js"></script>
+    <script src="lib/fc/fusioncharts.js"></script>
+    <script src="lib/fc/fusioncharts.multicharting.js"></script>
     <script src="dist/data-filter-es6.min.js"></script>
     <script src="main.js"></script>
-    <div id="filter-parent" style="width: 300px; height: 300px; border: 1px solid black;">
+    <div id="filter-parent" style="width: 300px; height: auto; border: 1px solid black;">
 
 
       <!-- <div class="fc_ext_filter_cont" style="height: 800px; overflow-y: scroll; overflow-x: hidden;">
@@ -80,6 +39,29 @@
                 </li>
               </ul>
             </div>
+          </div>
+        </section>
+        <section>
+          <button>Apply</button>
+        </section>
+      </div> -->
+
+       <!-- <div class="fc_ext_filter_cont" style="height: 800px; overflow-y: scroll; overflow-x: hidden;">
+        <section>
+          <div class="fc_ext_filter_card">
+            <header>
+             <input type="checkbox" value="product" id="fc_ext_filter_item_product" disabled="false">
+             <label for="fc_ext_filter_item_product">Product</label>
+            </header>
+            <div class="fc_ext_filter_card-body">
+
+              <div class="slider_base">
+                <div class="slider_connect" style="left: 20%; right: 20%;"></div>
+                <div class="slider_handle min" style="left:20%;"></div>
+                <div class="slider_handle max" style="left: 80%;"></div>
+              </div>
+            </div>
+
           </div>
         </section>
         <section>
