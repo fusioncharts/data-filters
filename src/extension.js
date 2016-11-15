@@ -79,10 +79,12 @@ class FCDataFilterExt {
   * apply has been clicked in ui
   */
   apply (config) {
-    var dataprocessor = this.multiChart.createDataProcessor();
+    var dataprocessor = this.multiChart.createDataProcessor(),
+      datastore = this.multiChart.createDataStore();
     dataprocessor.filter(this.createFilter(config));
     // Executing the callback function whenever filter is applied
-    this.callback(this.datastore.getData(dataprocessor));
+    datastore.setData(this.datastore.getData(dataprocessor).getJSON());
+    this.callback(datastore);
   }
 
   createFilter (_config) {
