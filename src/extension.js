@@ -1,7 +1,5 @@
 class FCDataFilterExt {
-  constructor (userconfig) {
-    this.multiChart = new MultiCharting();
-    this.datastore = this.multiChart.createDataStore();
+  constructor (datastore, userconfig, id, cb) {
     /**
     * User configuration format
     * {
@@ -15,55 +13,12 @@ class FCDataFilterExt {
     *   }
     * }
     */
+    this.multiChart = new MultiCharting();
+    this.datastore = datastore;
+    this.callback = cb;
     this.userconfig = userconfig || {};
-    // setting demo data
-    this.demoData = {
-      dataSource: [{
-        product: 'tea',
-        state: 'bengal',
-        sale: '45',
-        year: 1990
-      },
-      {
-        product: 'coffee',
-        sale: '90',
-        state: 'orissa',
-        year: 2016
-      },
-      {
-        product: 'tea',
-        sale: '190',
-        state: 'bihar',
-        year: 2010
-      },
-      {
-        product: 'coffee',
-        sale: '120',
-        state: 'bengal',
-        year: 2012
-      },
-      {
-        product: 'espresso',
-        sale: '200',
-        state: 'orissa',
-        year: 2012
-      },
-      {
-        product: 'latte',
-        sale: '50',
-        state: 'bihar',
-        year: 2013
-      },
-      {
-        product: 'cappuccino',
-        sale: '100',
-        state: 'orissa',
-        year: 2015
-      }]
-    };
-    this.datastore.setData(this.demoData);
     this.displayConfig = this.createMenuConfigFromData();
-    this.filterVisual = new FilterVisual(this.displayConfig, 'filter-parent', this);
+    this.filterVisual = new FilterVisual(this.displayConfig, id, this);
     // data set
   }
 
@@ -124,10 +79,10 @@ class FCDataFilterExt {
   * apply has been clicked in ui
   */
   apply (config) {
-    console.log('Before change', JSON.stringify(this.datastore.getJSON(), null, 4));
     var dataprocessor = this.multiChart.createDataProcessor();
     dataprocessor.filter(this.createFilter(config));
-    console.log('After change', JSON.stringify(this.datastore.getData(dataprocessor).getJSON(), null, 4));
+    // Executing the callback function whenever filter is applied
+    this.callback(this.datastore.getData(dataprocessor));
   }
 
   createFilter (_config) {
