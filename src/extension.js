@@ -83,8 +83,7 @@ class FCDataFilterExt {
       datastore = this.multiChart.createDataStore();
     dataprocessor.filter(this.createFilter(config));
     // Executing the callback function whenever filter is applied
-    datastore.setData(this.datastore.getData(dataprocessor).getJSON());
-    this.callback(datastore);
+    this.callback(this.datastore.getData(dataprocessor));
   }
 
   createFilter (_config) {

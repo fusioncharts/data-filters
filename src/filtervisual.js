@@ -30,7 +30,7 @@ class FilterVisual {
 
   /**
    * @private
-   * Create dom elements and set attributes
+   * Create DOM elements and set attributes
    */
   createElements (name, attr) {
     var elem = document.createElement(name),
@@ -61,9 +61,9 @@ class FilterVisual {
       minVal = range[0],
       maxVal = range[1],
       diffVal = maxVal - minVal,
-      sliderBaseWidth,
       getInputValue = function () {
-        var valuePerPixel = diffVal / sliderBaseWidth;
+        var sliderBaseWidth = sliderBase.offsetWidth,
+          valuePerPixel = diffVal / sliderBaseWidth;
         return {
           min: Math.round((valuePerPixel * parseInt(minSliderHandle.style.left)) + minVal),
           max: Math.round((valuePerPixel * parseInt(maxSliderHandle.style.left)) + minVal)
@@ -87,7 +87,8 @@ class FilterVisual {
 
           // Set style to slider handle to reposition along drag
           repositionElement = (event) => {
-            var left = parseInt(initX) + event.clientX - mousePressX,
+            var sliderBaseWidth = sliderBase.offsetWidth,
+              left = parseInt(initX) + event.clientX - mousePressX,
               min,
               max;
 
@@ -109,33 +110,37 @@ class FilterVisual {
               rangeObj = getInputValue();
               dataObj.range[0] = minInput.value = rangeObj.min;
               dataObj.range[1] = maxInput.value = rangeObj.max;
-              self.applyFilter();
             }
             flag = true;
           };
 
         elem.addEventListener('mousedown', function (evnt) {
+          var mouseUpCallBack = function () {
+            self.applyFilter();
+            window.removeEventListener('mousemove', callBack, false);
+            window.removeEventListener('mouseup', mouseUpCallBack, false);
+          };
           initX = elem.style.left;
           mousePressX = evnt.clientX;
           window.addEventListener('mousemove', callBack, false);
-          window.addEventListener('mouseup', function () {
-            window.removeEventListener('mousemove', callBack, false);
-          }, false);
+          window.addEventListener('mouseup', mouseUpCallBack, false);
         }, false);
       },
 
       // Attach event to min max input text field of range slider
       attachInputEvent = function (elem, type) {
         elem.addEventListener('blur', function (evnt) {
-          var pixelPerValue = sliderBaseWidth / diffVal,
-            minInputVal = parseInt(minInput.value),
-            maxInputVal = parseInt(maxInput.value),
+          var sliderBaseWidth = sliderBase.offsetWidth,
+            pixelPerValue = sliderBaseWidth / diffVal,
+            minInputVal = Number(minInput.value),
+            maxInputVal = Number(maxInput.value),
             tempVal,
             rangeObj;
 
           if ((minInputVal >= minVal) && (maxInputVal <= maxVal) && (minInputVal <= maxInputVal)) {
-            sliderConnect.style.left = minSliderHandle.style.left = (pixelPerValue * (minInputVal - minVal)) + 'px';
-            tempVal = pixelPerValue * (maxInputVal - minVal);
+            sliderConnect.style.left = minSliderHandle.style.left =
+              Math.round((pixelPerValue * (minInputVal - minVal))) + 'px';
+            tempVal = Math.round(pixelPerValue * (maxInputVal - minVal));
             maxSliderHandle.style.left = tempVal + 'px';
             sliderConnect.style.right = (sliderBaseWidth - tempVal) + 'px';
           }
@@ -176,7 +181,6 @@ class FilterVisual {
       'class': 'fc_ext_filter_slider_base'
     });
     sliderWrapper.appendChild(sliderBase);
-    sliderBaseWidth = sliderBase.offsetWidth;
 
     sliderConnect = self.createElements('div', {
       'class': 'fc_ext_filter_slider_connect',
@@ -250,36 +254,7 @@ class FilterVisual {
         header = self.createElements('header');
         cards.appendChild(header);
 
-        if (!catObj.disabled && catObj.type === 'string') {
-          input = self.createElements('input', {
-            'type': 'checkbox',
-            'value': catName,
-            'id': 'fc_ext_filter_cat_' + catName,
-            'checked': catObj.checked,
-            'style': 'cursor: pointer;'
-          });
-          input.addEventListener('change', function () {
-            catObj.checked = input.checked;
-            for (let k = 0; k < catObj.items.length; k++) {
-              let itemObj = catObj.items[k],
-                elem = itemObj.elem;
-              if (elem) {
-                elem.checked = input.checked;
-                itemObj.checked = input.checked;
-              }
-            }
-            self.applyFilter();
-          }, false);
-
-          catObj.elem = input;
-          input.disabled = catObj.disabled;
-          header.appendChild(input);
-        }
-
-        label = self.createElements('label', {
-          'for': 'fc_ext_filter_cat_' + catName,
-          'style': 'cursor: pointer;'
-        });
+        label = self.createElements('label');
         label.innerHTML = catName.toUpperCase();
         header.appendChild(label);
 
@@ -309,23 +284,6 @@ class FilterVisual {
             });
             input.addEventListener('change', function () {
               itemObj.checked = input.checked;
-              let flag = true;
-              for (let k = 0; k < catObj.items.length; k++) {
-                let itemObj = catObj.items[k],
-                  elem = itemObj.elem;
-
-                if (elem.checked) {
-                  flag = false;
-                  break;
-                }
-              }
-
-              if (flag) {
-                catObj.checked = catObj.elem.checked = false;
-              } else {
-                catObj.checked = catObj.elem.checked = true;
-              }
-
               self.applyFilter();
             }, false);
 
