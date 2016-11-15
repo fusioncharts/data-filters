@@ -212,15 +212,12 @@ class FilterVisual {
       section,
       cards,
       header,
-      input,
       label,
       cardBody,
       ul,
       li,
       i,
       j,
-      catName,
-      catObj,
       button;
 
     if (!parentContainer) {
