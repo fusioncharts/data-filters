@@ -1,5 +1,5 @@
 class FCDataFilterExt {
-  constructor (datastore, userconfig, cb) {
+  constructor (datastore, userconfig, id, cb) {
     /**
     * User configuration format
     * {
@@ -18,7 +18,7 @@ class FCDataFilterExt {
     this.callback = cb;
     this.userconfig = userconfig || {};
     this.displayConfig = this.createMenuConfigFromData();
-    this.filterVisual = new FilterVisual(this.displayConfig, 'filter-parent', this);
+    this.filterVisual = new FilterVisual(this.displayConfig, id, this);
     // data set
   }
 
