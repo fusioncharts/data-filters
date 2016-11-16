@@ -215,9 +215,7 @@ class FilterVisual {
       wrapper,
       section,
       cards,
-      header,
       label,
-      cardBody,
       ul,
       li,
       i,
@@ -232,14 +230,15 @@ class FilterVisual {
 
     wrapper = self.createElements('div', {
       'class': 'fc_ext_filter_cont',
-      'style': 'overflow-y: scroll; overflow-x: hidden;'
+      'style': 'overflow-y: auto; overflow-x: hidden;'
     });
-    wrapper.style.height = parentContainer.style.height;
+    wrapper.style.height = parentContainer.offsetHeight + 'px';
     parentContainer.appendChild(wrapper);
 
     for (i = 0; i < filterState.length; i++) {
       let catObj = filterState[i],
-        input,
+        header,
+        cardBody,
         catName = catObj.category;
 
       if (catObj.visible) {
@@ -251,10 +250,14 @@ class FilterVisual {
         });
         section.appendChild(cards);
 
-        header = self.createElements('header');
+        header = self.createElements('header', {
+          'style': 'cursor: pointer;'
+        });
         cards.appendChild(header);
 
-        label = self.createElements('label');
+        label = self.createElements('label', {
+          'style': 'cursor: pointer;'
+        });
         label.innerHTML = catName.toUpperCase();
         header.appendChild(label);
 
@@ -262,6 +265,15 @@ class FilterVisual {
           'class': 'fc_ext_filter_card-body'
         });
         cards.appendChild(cardBody);
+
+        header.addEventListener('click', function () {
+          var cardBodyStyle = cardBody.style;
+          if (cardBodyStyle.display === 'none') {
+            cardBodyStyle.display = 'block';
+          } else {
+            cardBodyStyle.display = 'none';
+          }
+        }, false);
 
         if (catObj.type === 'string') {
           ul = self.createElements('ul');
