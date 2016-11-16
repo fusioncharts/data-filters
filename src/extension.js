@@ -135,7 +135,7 @@ class FCDataFilterExt {
       this.__applyUserConfig__(temp);
       config.push(temp);
     }
-    return config;
+    return configOb;
   }
 
   __createItemsList__ (object) {
@@ -230,7 +230,7 @@ class FCDataFilterExt {
       }
     }
     if (!userconfig.range || !userconfig.range[category]) {
-      return type.string;
+      // return type.string;
     }
     return type.number;
   }

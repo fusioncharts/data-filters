@@ -2,14 +2,14 @@
 
 class FilterVisual {
 
-  constructor (filterState, containerId, filterExt) {
+  constructor (filterObj, containerId, filterExt) {
     /**
      * @private
      */
-    this.filterState = filterState;
-    this.originalFilterState = this.makeCopy(filterState);
+    this.filterState = filterObj.data;
+    this.originalFilterState = this.makeCopy(this.filterState);
     this.filterExt = filterExt;
-    this.config = {};
+    this.config = filterObj;
     this.config.containerId = containerId;
     this.draw();
   }
@@ -51,15 +51,18 @@ class FilterVisual {
     var self = this,
       sliderWrapper,
       inputWrapper,
+      labelWrapper,
       minInput,
       maxInput,
+      minLabel,
+      maxLabel,
       sliderBase,
       sliderConnect,
       minSliderHandle,
       maxSliderHandle,
       range = dataObj.range,
-      minVal = range[0],
-      maxVal = range[1],
+      minVal = range.min,
+      maxVal = range.max,
       diffVal = maxVal - minVal,
       getInputValue = function () {
         var sliderBaseWidth = sliderBase.offsetWidth,
@@ -108,8 +111,8 @@ class FilterVisual {
                 sliderConnect.style.right = (sliderBaseWidth - left) + 'px';
               }
               rangeObj = getInputValue();
-              dataObj.range[0] = minInput.value = rangeObj.min;
-              dataObj.range[1] = maxInput.value = rangeObj.max;
+              dataObj.range.min = minInput.value = rangeObj.min;
+              dataObj.range.max = maxInput.value = rangeObj.max;
             }
             flag = true;
           };
@@ -145,8 +148,8 @@ class FilterVisual {
             sliderConnect.style.right = (sliderBaseWidth - tempVal) + 'px';
           }
           rangeObj = getInputValue();
-          dataObj.range[0] = minInput.value = rangeObj.min;
-          dataObj.range[1] = maxInput.value = rangeObj.max;
+          dataObj.range.min = minInput.value = rangeObj.min;
+          dataObj.range.max = maxInput.value = rangeObj.max;
           self.applyFilter();
         }, false);
       };
@@ -201,6 +204,23 @@ class FilterVisual {
     });
     sliderBase.appendChild(maxSliderHandle);
     attachHandlerEvent(maxSliderHandle, 'max');
+
+    labelWrapper = self.createElements('div', {
+      'class': 'fc_ext_filter_slider_label'
+    });
+    sliderWrapper.appendChild(labelWrapper);
+
+    minLabel = self.createElements('label', {
+      'style': 'margin-left: 9px;'
+    });
+    minLabel.innerHTML = minVal;
+    labelWrapper.appendChild(minLabel);
+
+    maxLabel = self.createElements('label', {
+      'style': 'float: right; margin-right: 9px;'
+    });
+    maxLabel.innerHTML = maxVal;
+    labelWrapper.appendChild(maxLabel);
   }
 
   /**
