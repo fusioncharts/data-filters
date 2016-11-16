@@ -121,15 +121,18 @@ class FilterVisual {
           };
 
         elem.addEventListener('mousedown', function (evnt) {
-          var mouseUpCallBack = function () {
-            self.applyFilter();
-            window.removeEventListener('mousemove', callBack, false);
-            window.removeEventListener('mouseup', mouseUpCallBack, false);
-          };
+          var body = document.body,
+            mouseUpCallBack = function () {
+              body.style.cursor = '';
+              body.removeEventListener('mousemove', callBack, false);
+              body.removeEventListener('mouseup', mouseUpCallBack, false);
+              self.applyFilter();
+            };
           initX = elem.style.left;
           mousePressX = evnt.clientX;
-          window.addEventListener('mousemove', callBack, false);
-          window.addEventListener('mouseup', mouseUpCallBack, false);
+          body.style.cursor = 'pointer';
+          body.addEventListener('mousemove', callBack, false);
+          body.addEventListener('mouseup', mouseUpCallBack, false);
         }, false);
       },
 

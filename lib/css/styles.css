@@ -13,6 +13,7 @@
 .fc_ext_filter_card {
   border: 1px solid #808585;
   background-color: #fff;
+  border-radius: 2px;
 }
 
 .fc_ext_filter_card header {
