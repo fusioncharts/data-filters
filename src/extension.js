@@ -3,13 +3,15 @@ class FCDataFilterExt {
     /**
     * User configuration format
     * {
+    *   hideControl: false,
+    *   dynamicControl: false,
     *   blockedCategories: ['Product'],
     *   disabledCategories: ['Product'],
     *   disabledItems: {
     *     'Product' : ['Tea']
     *   },
     *   range: {
-    *     year: {min: 2000, max: 2010}
+    *     year: {min: 2000, max: 2010, step: 3, precision: 2}
     *   }
     * }
     */
@@ -105,7 +107,12 @@ class FCDataFilterExt {
   * view will be rendered.
   */
   createMenuConfigFromData () {
-    var config = [],
+    var configOb = {
+        visible: !this.hideControl,
+        dynamic: !!this.dynamicControl,
+        data: []
+      },
+      config = configOb.data,
       datastore = this.datastore,
       key = '',
       temp = {},
@@ -122,10 +129,7 @@ class FCDataFilterExt {
       key = keysArr[i];
       temp = {
         category: key,
-        disabled: false,
-        checked: true,
-        visible: true,
-        enableCheck: false
+        visible: true
       };
       this.__createItemsList__(temp);
       this.__applyUserConfig__(temp);
@@ -138,11 +142,13 @@ class FCDataFilterExt {
     var datastore = this.datastore,
       category = object.category,
       valuesArr = datastore.getUniqueValues(category),
-      type = this.__getType__(valuesArr),
+      type = this.__getType__(valuesArr, category),
       min = 0,
       max = 0,
       i = 0,
-      ii = 0;
+      ii = 0,
+      step = 0,
+      precision = 0;
     // setting type
     object.type = type;
     if (type === 'string') {
@@ -172,8 +178,15 @@ class FCDataFilterExt {
         if (this.userconfig.range[category].max && this.userconfig.range[category].max < max) {
           max = this.userconfig.range[category].max;
         }
+        step = this.userconfig[category].step || 0;
+        precision = this.userconfig[category].precision || 2;
       }
-      object.range = [min, max];
+      object.range = {
+        min: min,
+        max: max,
+        step: step,
+        precision: precision
+      };
     }
   }
 
@@ -204,8 +217,9 @@ class FCDataFilterExt {
     }
   }
 
-  __getType__ (arr) {
+  __getType__ (arr, category) {
     let i = arr.length,
+      userconfig = this.userconfig,
       type = {
         string: 'string',
         number: 'number'
@@ -214,6 +228,9 @@ class FCDataFilterExt {
       if (isNaN(+arr[i])) {
         return type.string;
       }
+    }
+    if (!userconfig.range || !userconfig.range[category]) {
+      return type.string;
     }
     return type.number;
   }
