@@ -7,7 +7,7 @@
 .fc_ext_filter_cont section {
   box-sizing: border-box;
   width: 100%;
-  padding: 16px 16px 8px 16px;
+  padding: 16px 16px 0px 16px;
 }
 
 .fc_ext_filter_card {
@@ -26,12 +26,12 @@
 .fc_ext_filter_card-body {
   border-top: 1px solid #808585;
   color: #696969;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .fc_ext_filter_card-body ul {
   list-style: none;
-  margin:0;
+  margin: 0;
   padding: 0;
 }
 
@@ -114,5 +114,5 @@
   border-radius: 3px;
   font-size: 11px;
   cursor: pointer;
-  margin-right: 10px;
+  margin: 0px 5px 15px 0px;
 }

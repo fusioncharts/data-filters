@@ -335,7 +335,7 @@ class FilterVisual {
               'for': 'fc_ext_filter_item_' + itemVal,
               'style': 'cursor: pointer;'
             });
-            label.innerHTML = itemVal.toUpperCase();
+            label.innerHTML = itemVal;
             li.appendChild(label);
           }
         } else {
