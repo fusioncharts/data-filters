@@ -9,8 +9,11 @@ class FilterVisual {
     this.filterState = filterObj.data;
     this.originalFilterState = this.makeCopy(this.filterState);
     this.filterExt = filterExt;
-    this.config = filterObj;
-    this.config.containerId = containerId;
+    this.config = {
+      dynamic: filterObj.dynamic,
+      visible: filterObj.visible,
+      containerId: containerId
+    };
     this.draw();
   }
 
@@ -167,7 +170,8 @@ class FilterVisual {
 
     minInput = self.createElements('input', {
       'type': 'text',
-      'value': minVal
+      'value': minVal,
+      'style': 'margin-left: 9px;'
     });
     inputWrapper.appendChild(minInput);
     attachInputEvent(minInput, 'min');
@@ -175,7 +179,7 @@ class FilterVisual {
     maxInput = self.createElements('input', {
       'type': 'text',
       'value': maxVal,
-      'style': 'float: right;'
+      'style': 'float: right; margin-right: 9px;'
     });
     inputWrapper.appendChild(maxInput);
     attachInputEvent(maxInput, 'max');
@@ -230,7 +234,8 @@ class FilterVisual {
   draw () {
     var self = this,
       filterState = self.filterState,
-      containerId = self.config.containerId,
+      config = self.config,
+      containerId = config.containerId,
       parentContainer = document.getElementById(containerId),
       wrapper,
       section,
@@ -240,9 +245,10 @@ class FilterVisual {
       li,
       i,
       j,
-      button;
+      applyButton,
+      resetButton;
 
-    if (!parentContainer) {
+    if (!parentContainer || !config.visible) {
       return;
     }
 
@@ -336,21 +342,37 @@ class FilterVisual {
     }
     section = self.createElements('section');
     wrapper.appendChild(section);
-    button = self.createElements('button');
-    button.innerHTML = 'Reset';
-    button.onclick = function () {
+
+    if (!self.config.dynamic) {
+      applyButton = self.createElements('button', {
+        'class': 'fc_ext_filter_button',
+        'style': 'background-color: #555;'
+      });
+      applyButton.innerHTML = 'APPLY';
+      applyButton.onclick = function () {
+        self.applyFilter(true);
+      };
+      section.appendChild(applyButton);
+    }
+
+    resetButton = self.createElements('button', {
+      'class': 'fc_ext_filter_button',
+      'style': 'background-color: #898b8b;'
+    });
+    resetButton.innerHTML = 'RESET';
+    resetButton.onclick = function () {
       self.filterState = self.makeCopy(self.originalFilterState);
       self.draw();
-      self.applyFilter();
+      self.applyFilter(true);
     };
-    section.appendChild(button);
-    window.filterState = filterState;
-    window.originalFilterState = self.originalFilterState;
+    section.appendChild(resetButton);
   }
 
   // Apply filter to the Data
-  applyFilter () {
+  applyFilter (callFromButton) {
     var self = this;
-    self.filterExt.apply(self.filterState);
+    if (self.config.dynamic || callFromButton) {
+      self.filterExt.apply(self.filterState);
+    }
   }
 }
