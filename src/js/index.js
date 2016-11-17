@@ -2,6 +2,9 @@
 
 const FilterVisual = require('./filtervisual');
 
+/**
+ * Class representing the Data Aggregator.
+ */
 class FCDataFilterExt {
   /**
    * Create a Data Filter.

@@ -55,6 +55,9 @@
 
 	const FilterVisual = __webpack_require__(2);
 
+	/**
+	 * Class representing the Data Aggregator.
+	 */
 	class FCDataFilterExt {
 	  /**
 	   * Create a Data Filter.
