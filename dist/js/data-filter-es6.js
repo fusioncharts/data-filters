@@ -61,29 +61,35 @@
 	class FCDataFilterExt {
 	  /**
 	   * Create a Data Filter.
-	   * @param {Object} datastore - Consists of Global Data Store
-	   * @param {Object} userconfig - Consists of user's configauration
-	   * @param {Boolean} userconfig.hideControl - If 'true', control panel is rendered else not.
-	   * @param {Boolean} userconfig.dynamicControl - If 'true', filter applies on any change in filter
+	   * @param {Object} datastore - Defines the Global Data Store
+	   * @param {Object} userconfig - Defines the user's configauration
+	   * @param {Boolean} [userconfig.autoApply=true] - If 'true', filter applies on any change in filter
 	      else an apply button is provided to filter.
-	   * @param {Array} userconfig.blockedCategories - Consists of categories which will not be shown in
-	      filter control panel.
-	   * @param {Array} userconfig.disabledCategories - Consists of categories which will remain inactive in
-	      filter control panel.
-	   * @param {Object} userconfig.disabledItems - Consists of categories whose sub-categories
-	      which will remain inactive in filter control panel.
-	   * @param {Array} userconfig.disabledItems.sampleCategory - Consists of sub-categories
-	      which will remain inactive in filter control panel.
-	   * @param {Object} userconfig.range - Consists of measure values.
-	   * @param {Object} userconfig.range.sampleMeasure - Consists of measure values and configurations.
-
-	   * @param {Object} userconfig.range.sampleMeasure.min - Consists of min value of a measure.
-	   * @param {Object} userconfig.range.sampleMeasure.max - Consists of max value of a measure.
-	   * @param {Object} userconfig.range.sampleMeasure.step - Consists of step value of slider.
-	   * @param {Object} userconfig.range.sampleMeasure.precision - Consists of precision value (number of decimal points).
-
-	   * @param {string} id - Id of the container of Control panel
-	   * @param {function} cb - Callback function to apply filter
+	   * @param {Object} userconfig.fieldConfig - Defines the field configurations
+	   * @param {Object} userconfig.fieldConfig.fieldName - Defines the config for the particular field
+	   * @param {Boolean} [userconfig.fieldConfig.fieldName.visible=true] - If 'true', the field will be visible in control
+	     panel and vice versa.
+	   * @param {Boolean} [userconfig.fieldConfig.fieldName.selectable=true] - If 'false', all the values of the field
+	     cannot be interacted and vice versa.
+	   * @param {Array} [userconfig.fieldConfig.fieldName.nonSelectableValues=[]] - Defines the values of a field which
+	     cannot be interacted.
+	   * @param {Array} [userconfig.fieldConfig.fieldName.nonSelectedValues=[]] - Defines the values of a field which
+	     will not be selected (i.e., unchecked) initially.
+	   * @param {Boolean} [userconfig.fieldConfig.fieldName.collapsed=false] - If 'true', the field in control panel
+	     will be in collapsed mode else it will be expanded initially.
+	   * @param {number} [userconfig.fieldConfig.fieldName.step=0] - Defines the step interval of range slider, if '0' then
+	     the range slider will be continuos else it will be discrete.
+	   * @param {number} [userconfig.fieldConfig.fieldName.decimal=0] - Defines the number of decimal point in range
+	   * @param {number} [userconfig.fieldConfig.fieldName.scaleMin=min value of all fields] - Defines the minimum
+	     value of the scale in range slider
+	   * @param {number} [userconfig.fieldConfig.fieldName.scaleMax=max value of all fields] - Defines the maximum
+	     value of the scale in range slider
+	   * @param {number} [userconfig.fieldConfig.fieldName.activeMin=scaleMin] - Defines the value of min slider
+	     handle in range slider.
+	   * @param {number} [userconfig.fieldConfig.fieldName.activeMax=scaleMax] - Defines the value of max slider
+	     handle in range slider.
+	   * @param {string} containerId - Defines the container id of control box
+	   * @param {function} callback - Callback function to apply filter
 	   */
 	  constructor (datastore, userconfig, id, cb) {
 	    /**

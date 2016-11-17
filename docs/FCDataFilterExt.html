@@ -57,7 +57,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="FCDataFilterExt"><span class="type-signature"></span>new FCDataFilterExt<span class="signature">(datastore, userconfig, id, cb)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="FCDataFilterExt"><span class="type-signature"></span>new FCDataFilterExt<span class="signature">(datastore, userconfig, containerId, callback)</span><span class="type-signature"></span></h4>
 
     
 
@@ -163,7 +163,7 @@
 
             
 
-            <td class="description last">Consists of Global Data Store</td>
+            <td class="description last">Defines the Global Data Store</td>
         </tr>
 
     
@@ -186,7 +186,7 @@
 
             
 
-            <td class="description last">Consists of user's configauration
+            <td class="description last">Defines the user's configauration
                 <h6>Properties</h6>
                 
 
@@ -200,7 +200,11 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -212,7 +216,7 @@
 
         <tr>
             
-                <td class="name"><code>hideControl</code></td>
+                <td class="name"><code>autoApply</code></td>
             
 
             <td class="type">
@@ -225,30 +229,23 @@
             </td>
 
             
-
-            
-
-            <td class="description last">If 'true', control panel is rendered else not.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>dynamicControl</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">Boolean</span>
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
 
             
-            </td>
-
-            
-
+                <td class="default">
+                
+                    <code>true</code>
+                
+                </td>
             
 
             <td class="description last">If 'true', filter applies on any change in filter
@@ -259,55 +256,7 @@
 
         <tr>
             
-                <td class="name"><code>blockedCategories</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Consists of categories which will not be shown in
-      filter control panel.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>disabledCategories</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Consists of categories which will remain inactive in
-      filter control panel.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>disabledItems</code></td>
+                <td class="name"><code>fieldConfig</code></td>
             
 
             <td class="type">
@@ -320,11 +269,22 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last">Consists of categories whose sub-categories
-      which will remain inactive in filter control panel.
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Defines the field configurations
                 <h6>Properties</h6>
                 
 
@@ -350,7 +310,133 @@
 
         <tr>
             
-                <td class="name"><code>sampleCategory</code></td>
+                <td class="name"><code>fieldName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Defines the config for the particular field
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>visible</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>true</code>
+                
+                </td>
+            
+
+            <td class="description last">If 'true', the field will be visible in control
+     panel and vice versa.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>selectable</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>true</code>
+                
+                </td>
+            
+
+            <td class="description last">If 'false', all the values of the field
+     cannot be interacted and vice versa.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>nonSelectableValues</code></td>
             
 
             <td class="type">
@@ -363,148 +449,107 @@
             </td>
 
             
-
-            
-
-            <td class="description last">Consists of sub-categories
-      which will remain inactive in filter control panel.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>range</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Consists of measure values.
-                <h6>Properties</h6>
+                    &lt;optional><br>
                 
 
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>sampleMeasure</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Consists of measure values and configurations.
-                <h6>Properties</h6>
                 
 
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>min</code></td>
-            
-
-            <td class="type">
-            
                 
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
+                </td>
             
 
             
+                <td class="default">
+                
+                    <code>[]</code>
+                
+                </td>
+            
 
-            <td class="description last">Consists of min value of a measure.</td>
+            <td class="description last">Defines the values of a field which
+     cannot be interacted.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>max</code></td>
+                <td class="name"><code>nonSelectedValues</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">Array</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last">Consists of max value of a measure.</td>
+            
+                <td class="default">
+                
+                    <code>[]</code>
+                
+                </td>
+            
+
+            <td class="description last">Defines the values of a field which
+     will not be selected (i.e., unchecked) initially.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>collapsed</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last">If 'true', the field in control panel
+     will be in collapsed mode else it will be expanded initially.</td>
         </tr>
 
     
@@ -517,40 +562,233 @@
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">number</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last">Consists of step value of slider.</td>
+            
+                <td class="default">
+                
+                    <code>0</code>
+                
+                </td>
+            
+
+            <td class="description last">Defines the step interval of range slider, if '0' then
+     the range slider will be continuos else it will be discrete.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>precision</code></td>
+                <td class="name"><code>decimal</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">number</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last">Consists of precision value (number of decimal points).</td>
+            
+                <td class="default">
+                
+                    <code>0</code>
+                
+                </td>
+            
+
+            <td class="description last">Defines the number of decimal point in range</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>scaleMin</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>min value of all fields</code>
+                
+                </td>
+            
+
+            <td class="description last">Defines the minimum
+     value of the scale in range slider</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>scaleMax</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>max value of all fields</code>
+                
+                </td>
+            
+
+            <td class="description last">Defines the maximum
+     value of the scale in range slider</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>activeMin</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>scaleMin</code>
+                
+                </td>
+            
+
+            <td class="description last">Defines the value of min slider
+     handle in range slider.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>activeMax</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>scaleMax</code>
+                
+                </td>
+            
+
+            <td class="description last">Defines the value of max slider
+     handle in range slider.</td>
         </tr>
 
     
@@ -578,7 +816,7 @@
 
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>containerId</code></td>
             
 
             <td class="type">
@@ -594,14 +832,14 @@
 
             
 
-            <td class="description last">Id of the container of Control panel</td>
+            <td class="description last">Defines the container id of control box</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>cb</code></td>
+                <td class="name"><code>callback</code></td>
             
 
             <td class="type">
@@ -671,7 +909,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu Nov 17 2016 15:48:40 GMT+0530 (IST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu Nov 17 2016 18:53:29 GMT+0530 (IST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
