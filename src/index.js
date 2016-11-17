@@ -64,8 +64,8 @@ class FCDataFilterExt {
       if (item.type === 'number') {
         for (j = 0, jj = item.items.length; j < jj; ++j) {
           subItem = item.items[j];
-          min = item.range[0];
-          max = item.range[1];
+          min = item.range.min;
+          max = item.range.max;
           if (includeAll || subItem.value < min || subItem.value > max) {
             if (blockList.indexOf(item.category + subItem.value) === -1) {
               blockList.push(item.category + subItem.value);
