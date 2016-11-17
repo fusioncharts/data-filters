@@ -13,7 +13,7 @@ import webpackEs6Config from './webpack-es6.config.babel.js';
 const PATH = {
   allSrcJs: 'src/**/*.js',
   allTests: 'test/**/*.js',
-  clientEntryPoint: 'src/index.js',
+  clientEntryPoint: 'src/js/index.js',
   gulpFile: 'gulpfile.babel.js',
   webpackEs5File: 'webpack-es5.config.babel.js',
   webpackEs6File: 'webpack-es6.config.babel.js'
@@ -58,10 +58,15 @@ gulp.task('docs', ['test'], () => {
 gulp.task('build-es5', ['docs'], () =>
   gulp.src(PATH.clientEntryPoint)
   .pipe(webpack(webpackEs5Config))
-  .pipe(gulp.dest('dist'))
+  .pipe(gulp.dest('dist/js'))
 );
 
-gulp.task('build', ['build-es5'], () =>
+gulp.task('build-css', ['build-es5'], () =>
+  gulp.src('src/css/*.css')
+  .pipe(gulp.dest('dist/css'))
+);
+
+gulp.task('build', ['build-css'], () =>
   gulp.src(PATH.clientEntryPoint)
   .pipe(named())
   .pipe(webpack(webpackEs6Config))
@@ -72,7 +77,7 @@ gulp.task('build', ['build-es5'], () =>
     }
     cb();
   }))
-  .pipe(gulp.dest('dist'))
+  .pipe(gulp.dest('dist/js'))
 );
 
 gulp.task('watch', () =>

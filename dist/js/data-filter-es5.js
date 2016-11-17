@@ -53,10 +53,35 @@
 	var FilterVisual = __webpack_require__(1);
 
 	var FCDataFilterExt = function () {
+	  /**
+	   * Create a Data Filter.
+	   * @param {Object} datastore - Consists of Global Data Store
+	   * @param {Object} userconfig - Consists of user's configauration
+	   * @param {Boolean} userconfig.hideControl - If 'true', control panel is rendered else not.
+	   * @param {Boolean} userconfig.dynamicControl - If 'true', filter applies on any change in filter
+	      else an apply button is provided to filter.
+	   * @param {Array} userconfig.blockedCategories - Consists of categories which will not be shown in
+	      filter control panel.
+	   * @param {Array} userconfig.disabledCategories - Consists of categories which will remain inactive in
+	      filter control panel.
+	   * @param {Object} userconfig.disabledItems - Consists of categories whose sub-categories
+	      which will remain inactive in filter control panel.
+	   * @param {Array} userconfig.disabledItems.sampleCategory - Consists of sub-categories
+	      which will remain inactive in filter control panel.
+	   * @param {Object} userconfig.range - Consists of measure values.
+	   * @param {Object} userconfig.range.sampleMeasure - Consists of measure values and configurations.
+	    * @param {Object} userconfig.range.sampleMeasure.min - Consists of min value of a measure.
+	   * @param {Object} userconfig.range.sampleMeasure.max - Consists of max value of a measure.
+	   * @param {Object} userconfig.range.sampleMeasure.step - Consists of step value of slider.
+	   * @param {Object} userconfig.range.sampleMeasure.precision - Consists of precision value (number of decimal points).
+	    * @param {string} id - Id of the container of Control panel
+	   * @param {function} cb - Callback function to apply filter
+	   */
 	  function FCDataFilterExt(datastore, userconfig, id, cb) {
 	    _classCallCheck(this, FCDataFilterExt);
 
 	    /**
+	    * @private
 	    * User configuration format
 	    * {
 	    *   hideControl: false,
@@ -132,6 +157,7 @@
 	    } // end function
 
 	    /**
+	    * @private
 	    * function that will be called after
 	    * apply has been clicked in ui
 	    */
@@ -162,6 +188,7 @@
 	    }
 
 	    /**
+	    * @private
 	    * Create config menu according to which
 	    * view will be rendered.
 	    */
