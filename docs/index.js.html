@@ -1,3 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>index.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+const FilterVisual = require('./filtervisual');
+
 class FCDataFilterExt {
   constructor (datastore, userconfig, id, cb) {
     /**
@@ -38,21 +81,18 @@ class FCDataFilterExt {
       min = 0,
       max = 0,
       subItem = {};
-    for (i = 0; i < ii; ++i) {
+    for (i = 0; i &lt; ii; ++i) {
       item = list[i];
       includeAll = false;
       // if config was disabled or not visible; skip
       if (item.disabled || !item.visible) {
         continue;
       }
-      if (!item.checked) {
-        includeAll = true;
-      }
       // Operation for type string
       if (item.type === 'string') {
-        for (j = 0, jj = item.items.length; j < jj; ++j) {
+        for (j = 0, jj = item.items.length; j &lt; jj; ++j) {
           subItem = item.items[j];
-          if (!subItem.disabled && (includeAll || !subItem.checked)) {
+          if (!subItem.disabled &amp;&amp; (includeAll || !subItem.checked)) {
             if (blockList.indexOf(item.category + subItem.value) === -1) {
               blockList.push(item.category + subItem.value);
             } // end if
@@ -61,11 +101,11 @@ class FCDataFilterExt {
       } // end if
       // operation for type number
       if (item.type === 'number') {
-        for (j = 0, jj = item.items.length; j < jj; ++j) {
+        for (j = 0, jj = item.items.length; j &lt; jj; ++j) {
           subItem = item.items[j];
           min = item.range[0];
           max = item.range[1];
-          if (includeAll || subItem.value < min || subItem.value > max) {
+          if (includeAll || subItem.value &lt; min || subItem.value > max) {
             if (blockList.indexOf(item.category + subItem.value) === -1) {
               blockList.push(item.category + subItem.value);
             } // end if
@@ -107,9 +147,10 @@ class FCDataFilterExt {
   * view will be rendered.
   */
   createMenuConfigFromData () {
-    var configOb = {
-        visible: !this.hideControl,
-        dynamic: !!this.dynamicControl,
+    var userconfig = this.userconfig,
+      configOb = {
+        visible: !userconfig.hideControl,
+        dynamic: userconfig.dynamicControl === undefined ? true : userconfig.dynamicControl,
         data: []
       },
       config = configOb.data,
@@ -125,7 +166,7 @@ class FCDataFilterExt {
       return;
     }
     // Iterating over unique keys
-    for (i = 0, ii = keysArr.length; i < ii; ++i) {
+    for (i = 0, ii = keysArr.length; i &lt; ii; ++i) {
       key = keysArr[i];
       temp = {
         category: key,
@@ -154,7 +195,7 @@ class FCDataFilterExt {
     if (type === 'string') {
       // string will have items list
       object.items = [];
-      for (i = 0, ii = valuesArr.length; i < ii; ++i) {
+      for (i = 0, ii = valuesArr.length; i &lt; ii; ++i) {
         object.items.push({
           value: valuesArr[i],
           disabled: false,
@@ -164,18 +205,18 @@ class FCDataFilterExt {
     } else if (type === 'number') {
       // numbers will have range and a value list
       object.items = [];
-      for (i = 0, ii = valuesArr.length; i < ii; ++i) {
+      for (i = 0, ii = valuesArr.length; i &lt; ii; ++i) {
         object.items.push({
           value: valuesArr[i]
         });
       }
       min = Math.min.apply(null, valuesArr);
       max = Math.max.apply(null, valuesArr);
-      if (this.userconfig.range && this.userconfig.range[category]) {
-        if (this.userconfig.range[category].min && this.userconfig.range[category].min > min) {
+      if (this.userconfig.range &amp;&amp; this.userconfig.range[category]) {
+        if (this.userconfig.range[category].min &amp;&amp; this.userconfig.range[category].min > min) {
           min = this.userconfig.range[category].min;
         }
-        if (this.userconfig.range[category].max && this.userconfig.range[category].max < max) {
+        if (this.userconfig.range[category].max &amp;&amp; this.userconfig.range[category].max &lt; max) {
           max = this.userconfig.range[category].max;
         }
         step = this.userconfig[category].step || 0;
@@ -196,20 +237,20 @@ class FCDataFilterExt {
       category = object.category,
       blockedCategories = userconfig.blockedCategories,
       disabledCategories = userconfig.disabledCategories,
-      disabledItems = userconfig.disabledItems && userconfig.disabledItems[category],
+      disabledItems = userconfig.disabledItems &amp;&amp; userconfig.disabledItems[category],
       items = object.items || [],
       i = 0,
       ii = items.length;
 
-    if (Array.isArray(blockedCategories) && blockedCategories.indexOf(category) !== -1) {
+    if (Array.isArray(blockedCategories) &amp;&amp; blockedCategories.indexOf(category) !== -1) {
       object.visible = false;
     }
-    if (Array.isArray(disabledCategories) && disabledCategories.indexOf(category) !== -1) {
+    if (Array.isArray(disabledCategories) &amp;&amp; disabledCategories.indexOf(category) !== -1) {
       object.disabled = true;
     }
 
     if (Array.isArray(disabledItems)) {
-      for (; i < ii; ++i) {
+      for (; i &lt; ii; ++i) {
         if (disabledItems.indexOf(items[i].value) !== -1) {
           object.items[i].disabled = true;
         }
@@ -236,3 +277,22 @@ class FCDataFilterExt {
   }
 }
 window.FCDataFilterExt = FCDataFilterExt;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu Nov 17 2016 13:04:23 GMT+0530 (IST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

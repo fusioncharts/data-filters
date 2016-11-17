@@ -2,7 +2,7 @@
 
 export default {
   output: {
-    filename: 'data-filter-es6.min.js'
+    filename: 'data-filter-es6.js'
   },
   resolve: {
     extensions: ['', '.js']

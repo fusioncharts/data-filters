@@ -268,6 +268,8 @@ class FilterVisual {
       let catObj = filterState[i],
         header,
         cardBody,
+        toggleTool,
+        headerCont,
         catName = catObj.category;
 
       if (catObj.visible) {
@@ -279,27 +281,34 @@ class FilterVisual {
         });
         section.appendChild(cards);
 
-        header = self.createElements('header', {
-          'style': 'cursor: pointer;'
-        });
+        header = self.createElements('header');
         cards.appendChild(header);
 
-        label = self.createElements('label', {
-          'style': 'cursor: pointer;'
-        });
+        headerCont = self.createElements('div');
+        header.appendChild(headerCont);
+
+        label = self.createElements('span');
         label.innerHTML = catName.toUpperCase();
-        header.appendChild(label);
+        headerCont.appendChild(label);
+
+        toggleTool = self.createElements('span', {
+          'class': 'fc_ext_filter_header_toggle'
+        });
+        headerCont.appendChild(toggleTool);
+        toggleTool.innerHTML = '[ - ]';
 
         cardBody = self.createElements('div', {
           'class': 'fc_ext_filter_card-body'
         });
         cards.appendChild(cardBody);
 
-        header.addEventListener('click', function () {
+        toggleTool.addEventListener('click', function () {
           var cardBodyStyle = cardBody.style;
           if (cardBodyStyle.display === 'none') {
+            toggleTool.innerHTML = '[ - ]';
             cardBodyStyle.display = 'block';
           } else {
+            toggleTool.innerHTML = '[ + ]';
             cardBodyStyle.display = 'none';
           }
         }, false);
@@ -379,3 +388,5 @@ class FilterVisual {
     }
   }
 }
+
+module.exports = FilterVisual;

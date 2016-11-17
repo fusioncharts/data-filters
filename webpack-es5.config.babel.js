@@ -3,7 +3,7 @@ import webpack from 'webpack';
 
 export default {
   output: {
-    filename: 'data-filter-es5.min.js'
+    filename: 'data-filter-es5.js'
   },
   module: {
     loaders: [
@@ -17,8 +17,5 @@ export default {
   resolve: {
     extensions: ['', '.js']
   },
-  devtool: 'inline-source-map',
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin({ minimize: true })
-  ]
+  devtool: 'inline-source-map'
 };
