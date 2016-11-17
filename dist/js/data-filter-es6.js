@@ -85,11 +85,10 @@
 	   * @param {number} [userconfig.fieldConfig.fieldName.scaleMax=max value of all fields] - Defines the maximum
 	     value of the scale in range slider
 	   * @param {number} [userconfig.fieldConfig.fieldName.activeMin=scaleMin] - Defines the value of min slider
-	     handle in range slider.
+	     handle in range slider initially.
 	   * @param {number} [userconfig.fieldConfig.fieldName.activeMax=scaleMax] - Defines the value of max slider
-	     handle in range slider.
+	     handle in range slider initially.
 	   * @param {string} containerId - Defines the container id of control box
-	   * @param {function} callback - Callback function to apply filter
 	   */
 	  constructor (datastore, userconfig, id, cb) {
 	    /**
