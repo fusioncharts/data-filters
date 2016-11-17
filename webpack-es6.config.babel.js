@@ -6,6 +6,5 @@ export default {
   },
   resolve: {
     extensions: ['', '.js']
-  },
-  devtool: 'inline-source-map'
+  }
 };
