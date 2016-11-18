@@ -10,8 +10,7 @@ class FilterVisual {
     this.originalFilterState = this.makeCopy(this.filterState);
     this.filterExt = filterExt;
     this.config = {
-      dynamic: filterObj.dynamic,
-      visible: filterObj.visible,
+      autoApply: filterObj.autoApply,
       containerId: containerId
     };
     this.draw();
@@ -251,7 +250,7 @@ class FilterVisual {
       applyButton,
       resetButton;
 
-    if (!parentContainer || !config.visible) {
+    if (!parentContainer) {
       return;
     }
 
@@ -355,7 +354,7 @@ class FilterVisual {
     section = self.createElements('section');
     wrapper.appendChild(section);
 
-    if (!self.config.dynamic) {
+    if (!self.config.autoApply) {
       applyButton = self.createElements('button', {
         'class': 'fc_ext_filter_button',
         'style': 'background-color: #555;'
@@ -383,7 +382,7 @@ class FilterVisual {
   // Apply filter to the Data
   applyFilter (callFromButton) {
     var self = this;
-    if (self.config.dynamic || callFromButton) {
+    if (self.config.autoApply || callFromButton) {
       self.filterExt.apply(self.filterState);
     }
   }
