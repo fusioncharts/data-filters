@@ -732,6 +732,7 @@
 
 	            if (input.disabled) {
 	              label.style.cursor = input.style.cursor = '';
+	              label.style.color = '#bdbdbd';
 	            }
 	          }
 	        } else {
@@ -744,8 +745,7 @@
 
 	    if (!self.config.autoApply) {
 	      applyButton = self.createElements('button', {
-	        'class': 'fc_ext_filter_button',
-	        'style': 'background-color: #555;'
+	        'class': 'fc_ext_filter_button fc_ext_filter_button_apply'
 	      });
 	      applyButton.innerHTML = 'APPLY';
 	      applyButton.onclick = function () {
@@ -755,8 +755,7 @@
 	    }
 
 	    resetButton = self.createElements('button', {
-	      'class': 'fc_ext_filter_button',
-	      'style': 'background-color: #898b8b;'
+	      'class': 'fc_ext_filter_button fc_ext_filter_button_reset'
 	    });
 	    resetButton.innerHTML = 'RESET';
 	    resetButton.onclick = function () {
