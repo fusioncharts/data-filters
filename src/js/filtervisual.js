@@ -7,32 +7,6 @@ class FilterVisual {
      * @private
      */
     this.filterState = filterObj.data;
-    // this.filterState = [{
-    //   'field': 'Product',
-    //   'visible': true,
-    //   'type': 'string',
-    //   'collapsed': true,
-    //   'items': [{
-    //     'value': 'Tea',
-    //     'disabled': false,
-    //     'checked': true
-    //   },
-    //   {
-    //     'value': 'Coffee',
-    //     'disabled': false,
-    //     'checked': true
-    //   }]
-    // },
-    // {
-    //   'field': 'Sale',
-    //   'visible': true,
-    //   'type': 'number',
-    //   'collapsed': false,
-    //   'range': {
-    //     'min': 10,
-    //     'max': 100
-    //   }
-    // }];
     this.originalFilterState = this.makeCopy(this.filterState);
     this.filterExt = filterExt;
     this.config = {
@@ -89,8 +63,8 @@ class FilterVisual {
       minSliderHandle,
       maxSliderHandle,
       range = dataObj.range,
-      minVal = range.min,
-      maxVal = range.max,
+      minVal = range.scaleMin,
+      maxVal = range.scaleMax,
       diffVal = maxVal - minVal,
       getInputValue = function () {
         var sliderBaseWidth = sliderBase.offsetWidth,
@@ -139,8 +113,8 @@ class FilterVisual {
                 sliderConnect.style.right = (sliderBaseWidth - left) + 'px';
               }
               rangeObj = getInputValue();
-              dataObj.range.min = minInput.value = rangeObj.min;
-              dataObj.range.max = maxInput.value = rangeObj.max;
+              dataObj.range.scaleMin = minInput.value = rangeObj.min;
+              dataObj.range.scaleMax = maxInput.value = rangeObj.max;
             }
             flag = true;
           };
@@ -179,8 +153,8 @@ class FilterVisual {
             sliderConnect.style.right = (sliderBaseWidth - tempVal) + 'px';
           }
           rangeObj = getInputValue();
-          dataObj.range.min = minInput.value = rangeObj.min;
-          dataObj.range.max = maxInput.value = rangeObj.max;
+          dataObj.range.scaleMin = minInput.value = rangeObj.min;
+          dataObj.range.scaleMax = maxInput.value = rangeObj.max;
           self.applyFilter();
         }, false);
       };
