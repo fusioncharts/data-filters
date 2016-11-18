@@ -95,7 +95,29 @@
 	    this.datastore = datastore;
 	    this.callback = cb;
 	    this.userconfig = userconfig || {};
+
+	    this.userconfig = {
+	      autoApply: true,
+	      fieldConfig: {
+	        'product': {
+	          selectable: true,
+	          collapsed: false,
+	          nonSelectableValues: ['Rice'],
+	          nonSelectedValues: ['Wheat']
+	        },
+	        'sale': {
+	          step: 2,
+	          decimal: 8,
+	          scaleMin: 2,
+	          scaleMax: 8,
+	          activeMin: 4,
+	          activeMax: 6
+	        }
+	      }
+	    };
+
 	    this.displayConfig = this.createMenuConfigFromData();
+	    console.log(this.displayConfig, 'out');
 	    this.filterVisual = new FilterVisual(this.displayConfig, id, this);
 	    // data set
 	  }
@@ -126,8 +148,8 @@
 	        for (j = 0, jj = item.items.length; j < jj; ++j) {
 	          subItem = item.items[j];
 	          if (!subItem.disabled && (includeAll || !subItem.checked)) {
-	            if (blockList.indexOf(item.category + subItem.value) === -1) {
-	              blockList.push(item.category + subItem.value);
+	            if (blockList.indexOf(item.field + subItem.value) === -1) {
+	              blockList.push(item.field + subItem.value);
 	            } // end if
 	          } // end if
 	        } // end for j
@@ -139,8 +161,8 @@
 	          min = item.range.min;
 	          max = item.range.max;
 	          if (includeAll || subItem.value < min || subItem.value > max) {
-	            if (blockList.indexOf(item.category + subItem.value) === -1) {
-	              blockList.push(item.category + subItem.value);
+	            if (blockList.indexOf(item.field + subItem.value) === -1) {
+	              blockList.push(item.field + subItem.value);
 	            } // end if
 	          } // end if
 	        } // end for j
@@ -187,7 +209,7 @@
 	        autoApply: pluckNumber(userconfig.autoApply, true),
 	        data: []
 	      },
-	      config = configOb.fieldConfig,
+	      config = configOb.data,
 	      datastore = this.datastore,
 	      key = '',
 	      temp = {},
@@ -249,8 +271,8 @@
 	          value: valuesArr[i]
 	        });
 	      }
-	      min = Math.min.apply(null, valuesArr);
-	      max = Math.max.apply(null, valuesArr);
+	      activeMin = min = Math.min.apply(null, valuesArr);
+	      activeMax = max = Math.max.apply(null, valuesArr);
 	      if (fieldConfig && fieldConfig[category]) {
 	        currentField = fieldConfig[category];
 	        if (currentField.scaleMin && currentField.scaleMin > min) {
@@ -285,7 +307,7 @@
 	  __applyUserConfig__ (object) {
 	    var userconfig = this.userconfig,
 	      type = object.type,
-	      category = object.category,
+	      category = object.field,
 	      disabledItems = userconfig.disabledItems && userconfig.disabledItems[category],
 	      items = object.items || [],
 	      i = 0,
@@ -298,10 +320,10 @@
 	    // Check if field exists
 	    if (fieldConfig && fieldConfig[category]) {
 	      currentField = fieldConfig[object.field];
-	      nonSelectedValues = currentField.nonSelectedValues;
-	      nonSelectableValues = currentField.nonSelectableValues;
-	      selectable = pluckNumber(currentField.selectable, true);
+	      nonSelectedValues = currentField.nonSelectedValues || [];
+	      nonSelectableValues = currentField.nonSelectableValues || [];
 	      // setting object properties
+	      selectable = pluckNumber(currentField.selectable, true);
 	      object.visible = pluckNumber(currentField.visible, true);
 	      object.collapsed = pluckNumber(currentField.collapsed, false);
 	      // setting field properties
@@ -310,10 +332,10 @@
 	          if (!selectable) {
 	            items[i].disabled = true;
 	          }
-	          if (!items[i].disabled && nonSelectableValues.indexOf(items[i].value)) {
+	          if (!items[i].disabled && nonSelectableValues.indexOf(items[i].value) !== -1) {
 	            items[i].disabled = true;
 	          }
-	          if (nonSelectedValues.indexOf(items[i].value)) {
+	          if (nonSelectedValues.indexOf(items[i].value) !== -1) {
 	            items[i].checked = false;
 	          }
 	        }
@@ -345,7 +367,7 @@
 	  if (val === undefined) {
 	    return def;
 	  }
-	  return !!val;
+	  return val;
 	}
 
 
