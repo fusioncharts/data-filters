@@ -88,44 +88,24 @@
 	     handle in range slider initially.
 	   * @param {string} containerId - Defines the container id of control box
 	   */
-	  function FCDataFilterExt(datastore, userconfig, id, cb) {
+	  function FCDataFilterExt(datastore, userconfig, id) {
 	    _classCallCheck(this, FCDataFilterExt);
 
 	    this.multiChart = new MultiCharting();
 	    this.datastore = datastore;
-	    this.callback = cb;
 	    this.userconfig = userconfig || {};
 
-	    this.userconfig = {
-	      autoApply: true,
-	      fieldConfig: {
-	        'product': {
-	          selectable: true,
-	          collapsed: false,
-	          nonSelectableValues: ['Rice'],
-	          nonSelectedValues: ['Wheat']
-	        },
-	        'sale': {
-	          step: 2,
-	          decimal: 8,
-	          scaleMin: 2,
-	          scaleMax: 8,
-	          activeMin: 4,
-	          activeMax: 6
-	        }
-	      }
-	    };
-
 	    this.displayConfig = this.createMenuConfigFromData();
-	    console.log(this.displayConfig, 'out');
 	    this.filterVisual = new FilterVisual(this.displayConfig, id, this);
+	    this.separator = '&*fusioncharts_()76eqw';
 	    // data set
 	  }
 
 	  _createClass(FCDataFilterExt, [{
 	    key: 'generateBlockList',
 	    value: function generateBlockList(_list) {
-	      var list = _list || [],
+	      var self = this,
+	          list = _list || [],
 	          i = 0,
 	          ii = list.length,
 	          key,
@@ -150,8 +130,8 @@
 	          for (j = 0, jj = item.items.length; j < jj; ++j) {
 	            subItem = item.items[j];
 	            if (!subItem.disabled && (includeAll || !subItem.checked)) {
-	              if (blockList.indexOf(item.field + subItem.value) === -1) {
-	                blockList.push(item.field + subItem.value);
+	              if (blockList.indexOf(item.field + self.separator + subItem.value) === -1) {
+	                blockList.push(item.field + self.separator + subItem.value);
 	              } // end if
 	            } // end if
 	          } // end for j
@@ -163,14 +143,15 @@
 	            min = item.range.min;
 	            max = item.range.max;
 	            if (includeAll || subItem.value < min || subItem.value > max) {
-	              if (blockList.indexOf(item.field + subItem.value) === -1) {
-	                blockList.push(item.field + subItem.value);
+	              if (blockList.indexOf(item.field + self.separator + subItem.value) === -1) {
+	                blockList.push(item.field + self.separator + subItem.value);
 	              } // end if
 	            } // end if
 	          } // end for j
 	        } // end if
 	      } // end for i
-	      return blockList;
+	      // sving block list to instance
+	      this.blockList = blockList;
 	    } // end function
 
 	    /**
@@ -182,21 +163,24 @@
 	  }, {
 	    key: 'apply',
 	    value: function apply(config) {
-	      var dataprocessor = this.multiChart.createDataProcessor(),
-	          datastore = this.multiChart.createDataStore();
-	      dataprocessor.filter(this.createFilter(config));
+	      var dataprocessor = this.dataprocessor || this.multiChart.createDataProcessor();
+	      this.generateBlockList(config);
+	      if (!this.dataprocessor) {
+	        this.dataprocessor = dataprocessor;
+	        dataprocessor.filter(this.createFilter(config));
+	      }
 	      // Executing the callback function whenever filter is applied
-	      this.callback(this.datastore.getData(dataprocessor));
+	      this.datastore.applyDataProcessor(this.dataprocessor);
 	    }
 	  }, {
 	    key: 'createFilter',
 	    value: function createFilter(_config) {
 	      var config = _config || this.displayConfig,
-	          blockList = this.generateBlockList(config);
+	          self = this;
 	      return function (object, index, array) {
 	        var key;
 	        for (key in object) {
-	          if (blockList.indexOf(key + object[key]) !== -1) {
+	          if (self.blockList.indexOf(key + self.separator + object[key]) !== -1) {
 	            return;
 	          }
 	        }
