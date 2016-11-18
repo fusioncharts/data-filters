@@ -701,7 +701,7 @@
 	          header.appendChild(headerCont);
 
 	          label = self.createElements('span');
-	          label.innerHTML = fieldName.toUpperCase();
+	          label.innerHTML = fieldName;
 	          headerCont.appendChild(label);
 
 	          toggleTool = self.createElements('span', {
@@ -749,7 +749,6 @@
 	                'type': 'checkbox',
 	                'value': itemVal,
 	                'id': 'fc_ext_filter_item_' + itemVal,
-	                'checked': itemObj.checked,
 	                'style': 'cursor: pointer;'
 	              });
 	              input.addEventListener('change', function () {
@@ -759,6 +758,7 @@
 
 	              itemObj.elem = input;
 	              input.disabled = itemObj.disabled;
+	              input.checked = itemObj.checked;
 	              li.appendChild(input);
 	              label = self.createElements('label', {
 	                'for': 'fc_ext_filter_item_' + itemVal,
@@ -766,6 +766,10 @@
 	              });
 	              label.innerHTML = itemVal;
 	              li.appendChild(label);
+
+	              if (input.disabled) {
+	                label.style.cursor = input.style.cursor = '';
+	              }
 	            };
 
 	            for (j = 0; j < fieldObj.items.length; j++) {
@@ -806,15 +810,16 @@
 	        self.applyFilter(true);
 	      };
 	      section.appendChild(resetButton);
+	      self.applyFilter(true);
 	    }
 
 	    // Apply filter to the Data
 
 	  }, {
 	    key: 'applyFilter',
-	    value: function applyFilter(callFromButton) {
+	    value: function applyFilter(forceCall) {
 	      var self = this;
-	      if (self.config.autoApply || callFromButton) {
+	      if (self.config.autoApply || forceCall) {
 	        self.filterExt.apply(self.filterState);
 	      }
 	    }
