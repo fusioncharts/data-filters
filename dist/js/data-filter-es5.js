@@ -91,22 +91,6 @@
 	  function FCDataFilterExt(datastore, userconfig, id, cb) {
 	    _classCallCheck(this, FCDataFilterExt);
 
-	    /**
-	    * @private
-	    * User configuration format
-	    * {
-	    *   hideControl: false,
-	    *   dynamicControl: false,
-	    *   blockedCategories: ['Product'],
-	    *   disabledCategories: ['Product'],
-	    *   disabledItems: {
-	    *     'Product' : ['Tea']
-	    *   },
-	    *   range: {
-	    *     year: {min: 2000, max: 2010, step: 3, precision: 2}
-	    *   }
-	    * }
-	    */
 	    this.multiChart = new MultiCharting();
 	    this.datastore = datastore;
 	    this.callback = cb;
@@ -209,11 +193,10 @@
 	    value: function createMenuConfigFromData() {
 	      var userconfig = this.userconfig,
 	          configOb = {
-	        visible: !userconfig.hideControl,
-	        dynamic: userconfig.dynamicControl === undefined ? true : userconfig.dynamicControl,
+	        autoApply: pluckNumber(userconfig.autoApply, true),
 	        data: []
 	      },
-	          config = configOb.data,
+	          config = configOb.fieldConfig,
 	          datastore = this.datastore,
 	          key = '',
 	          temp = {},
@@ -229,7 +212,7 @@
 	      for (i = 0, ii = keysArr.length; i < ii; ++i) {
 	        key = keysArr[i];
 	        temp = {
-	          category: key,
+	          field: key,
 	          visible: true
 	        };
 	        this.__createItemsList__(temp);
@@ -242,15 +225,20 @@
 	    key: '__createItemsList__',
 	    value: function __createItemsList__(object) {
 	      var datastore = this.datastore,
-	          category = object.category,
+	          category = object.field,
 	          valuesArr = datastore.getUniqueValues(category),
 	          type = this.__getType__(valuesArr, category),
+	          userconfig = this.userconfig,
+	          fieldConfig = userconfig.fieldConfig,
 	          min = 0,
 	          max = 0,
+	          activeMin = 0,
+	          activeMax = 0,
 	          i = 0,
 	          ii = 0,
 	          step = 0,
-	          precision = 0;
+	          precision = 2,
+	          currentField = {};
 	      // setting type
 	      object.type = type;
 	      if (type === 'string') {
@@ -273,21 +261,33 @@
 	        }
 	        min = Math.min.apply(null, valuesArr);
 	        max = Math.max.apply(null, valuesArr);
-	        if (this.userconfig.range && this.userconfig.range[category]) {
-	          if (this.userconfig.range[category].min && this.userconfig.range[category].min > min) {
-	            min = this.userconfig.range[category].min;
+	        if (fieldConfig && fieldConfig[category]) {
+	          currentField = fieldConfig[category];
+	          if (currentField.scaleMin && currentField.scaleMin > min) {
+	            min = currentField.scaleMin;
 	          }
-	          if (this.userconfig.range[category].max && this.userconfig.range[category].max < max) {
-	            max = this.userconfig.range[category].max;
+	          if (currentField.scaleMax && currentField.scaleMax < max) {
+	            max = currentField.scaleMax;
 	          }
-	          step = this.userconfig[category].step || 0;
-	          precision = this.userconfig[category].precision || 2;
-	        }
+	          activeMin = min;
+	          activeMax = max;
+	          if (currentField.activeMin && currentField.activeMin > activeMin) {
+	            activeMin = currentField.activeMin;
+	          }
+	          if (currentField.activeMax && currentField.activeMax < activeMax) {
+	            activeMax = currentField.activeMax;
+	          }
+	          step = pluckNumber(currentField.step, 0);
+	          precision = pluckNumber(currentField.decimal, 2);
+	        } // end if fieldConfig
+	        // Setting range to object
 	        object.range = {
-	          min: min,
-	          max: max,
+	          scaleMin: min,
+	          scaleMax: max,
+	          activeMin: activeMin,
+	          activeMax: activeMax,
 	          step: step,
-	          precision: precision
+	          decimal: precision
 	        };
 	      }
 	    }
@@ -297,24 +297,36 @@
 	      var userconfig = this.userconfig,
 	          type = object.type,
 	          category = object.category,
-	          blockedCategories = userconfig.blockedCategories,
-	          disabledCategories = userconfig.disabledCategories,
 	          disabledItems = userconfig.disabledItems && userconfig.disabledItems[category],
 	          items = object.items || [],
 	          i = 0,
-	          ii = items.length;
-
-	      if (Array.isArray(blockedCategories) && blockedCategories.indexOf(category) !== -1) {
-	        object.visible = false;
-	      }
-	      if (Array.isArray(disabledCategories) && disabledCategories.indexOf(category) !== -1) {
-	        object.disabled = true;
-	      }
-
-	      if (Array.isArray(disabledItems)) {
-	        for (; i < ii; ++i) {
-	          if (disabledItems.indexOf(items[i].value) !== -1) {
-	            object.items[i].disabled = true;
+	          ii = items.length,
+	          fieldConfig = userconfig.fieldConfig,
+	          currentField = {},
+	          nonSelectableValues = [],
+	          nonSelectedValues = [],
+	          selectable = true;
+	      // Check if field exists
+	      if (fieldConfig && fieldConfig[category]) {
+	        currentField = fieldConfig[object.field];
+	        nonSelectedValues = currentField.nonSelectedValues;
+	        nonSelectableValues = currentField.nonSelectableValues;
+	        selectable = pluckNumber(currentField.selectable, true);
+	        // setting object properties
+	        object.visible = pluckNumber(currentField.visible, true);
+	        object.collapsed = pluckNumber(currentField.collapsed, false);
+	        // setting field properties
+	        if (object.type === 'string') {
+	          for (i = 0, ii = items.length; i < ii; ++i) {
+	            if (!selectable) {
+	              items[i].disabled = true;
+	            }
+	            if (!items[i].disabled && nonSelectableValues.indexOf(items[i].value)) {
+	              items[i].disabled = true;
+	            }
+	            if (nonSelectedValues.indexOf(items[i].value)) {
+	              items[i].checked = false;
+	            }
 	          }
 	        }
 	      }
@@ -344,6 +356,13 @@
 	}();
 
 	window.FCDataFilterExt = FCDataFilterExt;
+
+	function pluckNumber(val, def) {
+	  if (val === undefined) {
+	    return def;
+	  }
+	  return !!val;
+	}
 
 /***/ },
 /* 1 */
