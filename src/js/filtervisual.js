@@ -7,6 +7,32 @@ class FilterVisual {
      * @private
      */
     this.filterState = filterObj.data;
+    // this.filterState = [{
+    //   'field': 'Product',
+    //   'visible': true,
+    //   'type': 'string',
+    //   'collapsed': true,
+    //   'items': [{
+    //     'value': 'Tea',
+    //     'disabled': false,
+    //     'checked': true
+    //   },
+    //   {
+    //     'value': 'Coffee',
+    //     'disabled': false,
+    //     'checked': true
+    //   }]
+    // },
+    // {
+    //   'field': 'Sale',
+    //   'visible': true,
+    //   'type': 'number',
+    //   'collapsed': false,
+    //   'range': {
+    //     'min': 10,
+    //     'max': 100
+    //   }
+    // }];
     this.originalFilterState = this.makeCopy(this.filterState);
     this.filterExt = filterExt;
     this.config = {
@@ -264,14 +290,14 @@ class FilterVisual {
     parentContainer.appendChild(wrapper);
 
     for (i = 0; i < filterState.length; i++) {
-      let catObj = filterState[i],
+      let fieldObj = filterState[i],
         header,
         cardBody,
         toggleTool,
         headerCont,
-        catName = catObj.category;
+        fieldName = fieldObj.field;
 
-      if (catObj.visible) {
+      if (fieldObj.visible) {
         section = self.createElements('section');
         wrapper.appendChild(section);
 
@@ -287,19 +313,26 @@ class FilterVisual {
         header.appendChild(headerCont);
 
         label = self.createElements('span');
-        label.innerHTML = catName.toUpperCase();
+        label.innerHTML = fieldName.toUpperCase();
         headerCont.appendChild(label);
 
         toggleTool = self.createElements('span', {
           'class': 'fc_ext_filter_header_toggle'
         });
         headerCont.appendChild(toggleTool);
-        toggleTool.innerHTML = '[ - ]';
 
         cardBody = self.createElements('div', {
           'class': 'fc_ext_filter_card-body'
         });
         cards.appendChild(cardBody);
+
+        if (fieldObj.collapsed) {
+          toggleTool.innerHTML = '[ + ]';
+          cardBody.style.display = 'none';
+        } else {
+          toggleTool.innerHTML = '[ - ]';
+          cardBody.style.display = 'block';
+        }
 
         toggleTool.addEventListener('click', function () {
           var cardBodyStyle = cardBody.style;
@@ -312,12 +345,12 @@ class FilterVisual {
           }
         }, false);
 
-        if (catObj.type === 'string') {
+        if (fieldObj.type === 'string') {
           ul = self.createElements('ul');
           cardBody.appendChild(ul);
 
-          for (j = 0; j < catObj.items.length; j++) {
-            let itemObj = catObj.items[j],
+          for (j = 0; j < fieldObj.items.length; j++) {
+            let itemObj = fieldObj.items[j],
               input,
               itemVal = itemObj.value;
 
@@ -347,7 +380,7 @@ class FilterVisual {
             li.appendChild(label);
           }
         } else {
-          self.createSlider(cardBody, catObj);
+          self.createSlider(cardBody, fieldObj);
         }
       }
     }
