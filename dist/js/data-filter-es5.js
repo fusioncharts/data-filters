@@ -160,8 +160,8 @@
 	        if (item.type === 'number') {
 	          for (j = 0, jj = item.items.length; j < jj; ++j) {
 	            subItem = item.items[j];
-	            min = item.range.min;
-	            max = item.range.max;
+	            min = item.range.scaleMin;
+	            max = item.range.scaleMax;
 	            if (includeAll || subItem.value < min || subItem.value > max) {
 	              if (blockList.indexOf(item.field + subItem.value) === -1) {
 	                blockList.push(item.field + subItem.value);
