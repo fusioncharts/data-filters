@@ -63,15 +63,15 @@ class FilterVisual {
       minSliderHandle,
       maxSliderHandle,
       range = dataObj.range,
-      minVal = range.scaleMin,
-      maxVal = range.scaleMax,
-      diffVal = maxVal - minVal,
+      scaleMinVal = range.scaleMin,
+      scaleMaxVal = range.scaleMax,
+      diffVal = scaleMaxVal - scaleMinVal,
       getInputValue = function () {
         var sliderBaseWidth = sliderBase.offsetWidth,
           valuePerPixel = diffVal / sliderBaseWidth;
         return {
-          min: Math.round((valuePerPixel * parseInt(minSliderHandle.style.left)) + minVal),
-          max: Math.round((valuePerPixel * parseInt(maxSliderHandle.style.left)) + minVal)
+          min: Math.round((valuePerPixel * parseInt(minSliderHandle.style.left)) + scaleMinVal),
+          max: Math.round((valuePerPixel * parseInt(maxSliderHandle.style.left)) + scaleMinVal)
         };
       },
       // Attach events to range slider handles
@@ -80,7 +80,7 @@ class FilterVisual {
           mousePressX,
           flag = true,
           rangeObj,
-          callBack = (event) => {
+          moveHandler = (event) => {
             var element = this;
             if (flag) {
               setTimeout(() => {
@@ -88,12 +88,14 @@ class FilterVisual {
                 repositionElement.call(element, event);
               }, 100);
             }
+            event.preventDefault();
           },
 
           // Set style to slider handle to reposition along drag
           repositionElement = (event) => {
             var sliderBaseWidth = sliderBase.offsetWidth,
-              left = parseInt(initX) + event.clientX - mousePressX,
+              clientX = event.touches ? event.touches[0].clientX : event.clientX,
+              left = parseInt(initX) + clientX - mousePressX,
               min,
               max;
 
@@ -117,22 +119,29 @@ class FilterVisual {
               dataObj.range.scaleMax = maxInput.value = rangeObj.max;
             }
             flag = true;
+          },
+          downHandler = (evnt) => {
+            var body = document.body,
+              upHandler = function () {
+                body.style.cursor = '';
+                body.removeEventListener('mousemove', moveHandler, false);
+                body.removeEventListener('touchmove', moveHandler, false);
+                body.removeEventListener('mouseup', upHandler, false);
+                body.removeEventListener('touchend', upHandler, false);
+                self.applyFilter();
+              };
+            initX = elem.style.left;
+            mousePressX = evnt.touches ? evnt.touches[0].clientX : evnt.clientX;
+            body.style.cursor = 'pointer';
+            body.addEventListener('mousemove', moveHandler, false);
+            body.addEventListener('touchmove', moveHandler, false);
+            body.addEventListener('mouseup', upHandler, false);
+            body.addEventListener('touchend', upHandler, false);
+            evnt.preventDefault();
           };
 
-        elem.addEventListener('mousedown', function (evnt) {
-          var body = document.body,
-            mouseUpCallBack = function () {
-              body.style.cursor = '';
-              body.removeEventListener('mousemove', callBack, false);
-              body.removeEventListener('mouseup', mouseUpCallBack, false);
-              self.applyFilter();
-            };
-          initX = elem.style.left;
-          mousePressX = evnt.clientX;
-          body.style.cursor = 'pointer';
-          body.addEventListener('mousemove', callBack, false);
-          body.addEventListener('mouseup', mouseUpCallBack, false);
-        }, false);
+        elem.addEventListener('mousedown', downHandler, false);
+        elem.addEventListener('touchstart', downHandler, false);
       },
 
       // Attach event to min max input text field of range slider
@@ -145,10 +154,10 @@ class FilterVisual {
             tempVal,
             rangeObj;
 
-          if ((minInputVal >= minVal) && (maxInputVal <= maxVal) && (minInputVal <= maxInputVal)) {
+          if ((minInputVal >= scaleMinVal) && (maxInputVal <= scaleMaxVal) && (minInputVal <= maxInputVal)) {
             sliderConnect.style.left = minSliderHandle.style.left =
-              Math.round((pixelPerValue * (minInputVal - minVal))) + 'px';
-            tempVal = Math.round(pixelPerValue * (maxInputVal - minVal));
+              Math.round((pixelPerValue * (minInputVal - scaleMinVal))) + 'px';
+            tempVal = Math.round(pixelPerValue * (maxInputVal - scaleMinVal));
             maxSliderHandle.style.left = tempVal + 'px';
             sliderConnect.style.right = (sliderBaseWidth - tempVal) + 'px';
           }
@@ -172,7 +181,7 @@ class FilterVisual {
 
     minInput = self.createElements('input', {
       'type': 'text',
-      'value': minVal,
+      'value': scaleMinVal,
       'style': 'margin-left: 9px;'
     });
     inputWrapper.appendChild(minInput);
@@ -180,7 +189,7 @@ class FilterVisual {
 
     maxInput = self.createElements('input', {
       'type': 'text',
-      'value': maxVal,
+      'value': scaleMaxVal,
       'style': 'float: right; margin-right: 9px;'
     });
     inputWrapper.appendChild(maxInput);
@@ -219,13 +228,13 @@ class FilterVisual {
     minLabel = self.createElements('label', {
       'style': 'margin-left: 9px;'
     });
-    minLabel.innerHTML = minVal;
+    minLabel.innerHTML = scaleMinVal;
     labelWrapper.appendChild(minLabel);
 
     maxLabel = self.createElements('label', {
       'style': 'float: right; margin-right: 9px;'
     });
-    maxLabel.innerHTML = maxVal;
+    maxLabel.innerHTML = scaleMaxVal;
     labelWrapper.appendChild(maxLabel);
   }
 
