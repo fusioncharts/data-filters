@@ -65,6 +65,8 @@ class FilterVisual {
       range = dataObj.range,
       scaleMinVal = range.scaleMin,
       scaleMaxVal = range.scaleMax,
+      activeMinVal = range.activeMin,
+      activeMaxVal = range.activeMax,
       diffVal = scaleMaxVal - scaleMinVal,
       getInputValue = function () {
         var sliderBaseWidth = sliderBase.offsetWidth,
@@ -115,8 +117,8 @@ class FilterVisual {
                 sliderConnect.style.right = (sliderBaseWidth - left) + 'px';
               }
               rangeObj = getInputValue();
-              dataObj.range.scaleMin = minInput.value = rangeObj.min;
-              dataObj.range.scaleMax = maxInput.value = rangeObj.max;
+              dataObj.range.activeMin = minInput.value = rangeObj.min;
+              dataObj.range.activeMax = maxInput.value = rangeObj.max;
             }
             flag = true;
           },
@@ -144,28 +146,30 @@ class FilterVisual {
         elem.addEventListener('touchstart', downHandler, false);
       },
 
+      changeInputHandler = function (event) {
+        var sliderBaseWidth = sliderBase.offsetWidth,
+          pixelPerValue = sliderBaseWidth / diffVal,
+          minInputVal = Number(minInput.value),
+          maxInputVal = Number(maxInput.value),
+          tempVal,
+          rangeObj;
+
+        if ((minInputVal >= scaleMinVal) && (maxInputVal <= scaleMaxVal) && (minInputVal <= maxInputVal)) {
+          sliderConnect.style.left = minSliderHandle.style.left =
+            Math.round((pixelPerValue * (minInputVal - scaleMinVal))) + 'px';
+          tempVal = Math.round(pixelPerValue * (maxInputVal - scaleMinVal));
+          maxSliderHandle.style.left = tempVal + 'px';
+          sliderConnect.style.right = (sliderBaseWidth - tempVal) + 'px';
+        }
+        rangeObj = getInputValue();
+        dataObj.range.activeMin = minInput.value = rangeObj.min;
+        dataObj.range.activeMax = maxInput.value = rangeObj.max;
+        event && (self.applyFilter());
+      },
+
       // Attach event to min max input text field of range slider
       attachInputEvent = function (elem, type) {
-        elem.addEventListener('blur', function (evnt) {
-          var sliderBaseWidth = sliderBase.offsetWidth,
-            pixelPerValue = sliderBaseWidth / diffVal,
-            minInputVal = Number(minInput.value),
-            maxInputVal = Number(maxInput.value),
-            tempVal,
-            rangeObj;
-
-          if ((minInputVal >= scaleMinVal) && (maxInputVal <= scaleMaxVal) && (minInputVal <= maxInputVal)) {
-            sliderConnect.style.left = minSliderHandle.style.left =
-              Math.round((pixelPerValue * (minInputVal - scaleMinVal))) + 'px';
-            tempVal = Math.round(pixelPerValue * (maxInputVal - scaleMinVal));
-            maxSliderHandle.style.left = tempVal + 'px';
-            sliderConnect.style.right = (sliderBaseWidth - tempVal) + 'px';
-          }
-          rangeObj = getInputValue();
-          dataObj.range.scaleMin = minInput.value = rangeObj.min;
-          dataObj.range.scaleMax = maxInput.value = rangeObj.max;
-          self.applyFilter();
-        }, false);
+        elem.addEventListener('blur', changeInputHandler, false);
       };
 
     // Create slider elements
@@ -181,7 +185,7 @@ class FilterVisual {
 
     minInput = self.createElements('input', {
       'type': 'text',
-      'value': scaleMinVal,
+      'value': activeMinVal,
       'style': 'margin-left: 9px;'
     });
     inputWrapper.appendChild(minInput);
@@ -189,7 +193,7 @@ class FilterVisual {
 
     maxInput = self.createElements('input', {
       'type': 'text',
-      'value': scaleMaxVal,
+      'value': activeMaxVal,
       'style': 'float: right; margin-right: 9px;'
     });
     inputWrapper.appendChild(maxInput);
@@ -219,6 +223,8 @@ class FilterVisual {
     });
     sliderBase.appendChild(maxSliderHandle);
     attachHandlerEvent(maxSliderHandle, 'max');
+
+    changeInputHandler();
 
     labelWrapper = self.createElements('div', {
       'class': 'fc_ext_filter_slider_label'
