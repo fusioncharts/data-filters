@@ -75,6 +75,25 @@
   border-radius: 2px;
 }
 
+.fc_ext_filter_slider_wrapper .fc_ext_filter_slider_scale {
+  position: relative;
+  top: 12px;
+  height: 5px;
+  width: 100%;
+}
+
+.fc_ext_filter_slider_wrapper .fc_ext_filter_slider_scale span{
+  position: absolute;
+  display: block;
+  background-color: #808585;
+  height: 5px;
+  width: 1px;
+}
+
+.fc_ext_filter_slider_wrapper .fc_ext_filter_slider_label {
+  padding-top: 15px;
+}
+
 .fc_ext_filter_slider_wrapper .fc_ext_filter_slider_label label {
   font-size: 11px;
   font-weight: bold;
@@ -83,7 +102,7 @@
 .fc_ext_filter_slider_wrapper .fc_ext_filter_slider_base {
   height: 3px;
   background-color: #ddd;
-  margin: 15px 10px 10px 10px;
+  margin: 15px 10px 36px 10px;
   border-radius: 5px;
   position: relative;
 }

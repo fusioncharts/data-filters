@@ -41,6 +41,23 @@ class FCDataFilterExt {
     this.multiChart = new MultiCharting();
     this.datastore = datastore;
     this.userconfig = userconfig || {};
+    // this.userconfig = {
+    //   autoApply: true,
+    //   fieldConfig: {
+    //     'product': {
+    //       selectable: true,
+    //       collapsed: false,
+    //       nonSelectableValues: ['Rice'],
+    //       nonSelectedValues: ['Wheat']
+    //     },
+    //     'sale': {
+    //       step: 2.5,
+    //       decimal: 1,
+    //       scaleMin: 1,
+    //       scaleMax: 10
+    //     }
+    //   }
+    // };
 
     this.displayConfig = this.createMenuConfigFromData();
     this.filterVisual = new FilterVisual(this.displayConfig, id, this);
@@ -180,7 +197,7 @@ class FCDataFilterExt {
       i = 0,
       ii = 0,
       step = 0,
-      precision = 2,
+      precision = 0,
       currentField = {};
     // setting type
     object.type = type;

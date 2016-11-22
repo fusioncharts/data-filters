@@ -94,6 +94,23 @@
 	    this.multiChart = new MultiCharting();
 	    this.datastore = datastore;
 	    this.userconfig = userconfig || {};
+	    // this.userconfig = {
+	    //   autoApply: true,
+	    //   fieldConfig: {
+	    //     'product': {
+	    //       selectable: true,
+	    //       collapsed: false,
+	    //       nonSelectableValues: ['Rice'],
+	    //       nonSelectedValues: ['Wheat']
+	    //     },
+	    //     'sale': {
+	    //       step: 2.5,
+	    //       decimal: 1,
+	    //       scaleMin: 1,
+	    //       scaleMax: 10
+	    //     }
+	    //   }
+	    // };
 
 	    this.displayConfig = this.createMenuConfigFromData();
 	    this.filterVisual = new FilterVisual(this.displayConfig, id, this);
@@ -233,7 +250,7 @@
 	      i = 0,
 	      ii = 0,
 	      step = 0,
-	      precision = 2,
+	      precision = 0,
 	      currentField = {};
 	    // setting type
 	    object.type = type;
@@ -360,6 +377,9 @@
 /***/ function(module, exports) {
 
 	'use strict';
+	const HUNDREED = 100,
+	  PERCENTAGESTRING = '%',
+	  CLASS = 'class';
 
 	class FilterVisual {
 
@@ -414,7 +434,9 @@
 	    var self = this,
 	      sliderWrapper,
 	      inputWrapper,
+	      scaleWrapper,
 	      labelWrapper,
+	      scaleTick,
 	      minInput,
 	      maxInput,
 	      minLabel,
@@ -429,20 +451,24 @@
 	      activeMinVal = range.activeMin,
 	      activeMaxVal = range.activeMax,
 	      diffVal = scaleMaxVal - scaleMinVal,
-	      getInputValue = function () {
-	        var sliderBaseWidth = sliderBase.offsetWidth,
-	          valuePerPixel = diffVal / sliderBaseWidth;
-	        return {
-	          min: Math.round((valuePerPixel * parseInt(minSliderHandle.style.left)) + scaleMinVal),
-	          max: Math.round((valuePerPixel * parseInt(maxSliderHandle.style.left)) + scaleMinVal)
-	        };
+	      step = range.step,
+	      i,
+	      stepsPosArr = [],
+	      pos,
+	      setInputValue = function () {
+	        var min,
+	          max;
+
+	        min = (((parseInt(minSliderHandle.style.left) / HUNDREED) * diffVal) + scaleMinVal).toFixed(range.decimal);
+	        max = (((parseInt(maxSliderHandle.style.left) / HUNDREED) * diffVal) + scaleMinVal).toFixed(range.decimal);
+	        range.activeMin = minInput.value = min;
+	        range.activeMax = maxInput.value = max;
 	      },
 	      // Attach events to range slider handles
 	      attachHandlerEvent = function (elem, type) {
 	        var initX,
 	          mousePressX,
 	          flag = true,
-	          rangeObj,
 	          moveHandler = (event) => {
 	            var element = this;
 	            if (flag) {
@@ -459,29 +485,46 @@
 	            var sliderBaseWidth = sliderBase.offsetWidth,
 	              clientX = event.touches ? event.touches[0].clientX : event.clientX,
 	              left = parseInt(initX) + clientX - mousePressX,
+	              leftPos,
 	              min,
 	              max;
 
 	            if (type === 'min') {
 	              min = 0;
-	              max = parseInt(maxSliderHandle.style.left) - 10;
+	              max = ((parseInt(maxSliderHandle.style.left) / HUNDREED) * sliderBaseWidth) - 10;
 	            } else {
-	              min = parseInt(minSliderHandle.style.left) + 10;
+	              min = ((parseInt(minSliderHandle.style.left) / HUNDREED) * sliderBaseWidth) + 10;
 	              max = sliderBaseWidth;
 	            }
 
 	            if (left >= min && left <= max) {
-	              elem.style.left = left + 'px';
+	              leftPos = ((HUNDREED / sliderBaseWidth) * left).toFixed(0);
+	              elem.style.left = leftPos + PERCENTAGESTRING;
+
 	              if (type === 'min') {
-	                sliderConnect.style.left = left + 'px';
+	                sliderConnect.style.left = leftPos + PERCENTAGESTRING;
 	              } else {
-	                sliderConnect.style.right = (sliderBaseWidth - left) + 'px';
+	                sliderConnect.style.right = (HUNDREED - leftPos) + PERCENTAGESTRING;
 	              }
-	              rangeObj = getInputValue();
-	              dataObj.range.activeMin = minInput.value = rangeObj.min;
-	              dataObj.range.activeMax = maxInput.value = rangeObj.max;
+
+	              setInputValue();
 	            }
 	            flag = true;
+	          },
+	          stepHandler = () => {
+	            var posArr = range.stepsPosArr,
+	              pos = parseInt(elem.style.left),
+	              closest = posArr
+	             .reduce((prev, curr) => Math.abs(curr - pos) < Math.abs(prev - pos) ? curr : prev);
+
+	            elem.style.left = closest.toFixed(0) + PERCENTAGESTRING;
+
+	            if (type === 'min') {
+	              sliderConnect.style.left = closest.toFixed(0) + PERCENTAGESTRING;
+	            } else {
+	              sliderConnect.style.right = (HUNDREED - closest) + PERCENTAGESTRING;
+	            }
+	            setInputValue();
 	          },
 	          downHandler = (evnt) => {
 	            var body = document.body,
@@ -491,9 +534,12 @@
 	                body.removeEventListener('touchmove', moveHandler, false);
 	                body.removeEventListener('mouseup', upHandler, false);
 	                body.removeEventListener('touchend', upHandler, false);
+	                if (step) {
+	                  stepHandler();
+	                }
 	                self.applyFilter();
 	              };
-	            initX = elem.style.left;
+	            initX = (parseInt(elem.style.left) / HUNDREED) * sliderBase.offsetWidth;
 	            mousePressX = evnt.touches ? evnt.touches[0].clientX : evnt.clientX;
 	            body.style.cursor = 'pointer';
 	            body.addEventListener('mousemove', moveHandler, false);
@@ -508,23 +554,18 @@
 	      },
 
 	      changeInputHandler = function (event) {
-	        var sliderBaseWidth = sliderBase.offsetWidth,
-	          pixelPerValue = sliderBaseWidth / diffVal,
-	          minInputVal = Number(minInput.value),
+	        var minInputVal = Number(minInput.value),
 	          maxInputVal = Number(maxInput.value),
-	          tempVal,
-	          rangeObj;
+	          tempVal;
 
 	        if ((minInputVal >= scaleMinVal) && (maxInputVal <= scaleMaxVal) && (minInputVal <= maxInputVal)) {
 	          sliderConnect.style.left = minSliderHandle.style.left =
-	            Math.round((pixelPerValue * (minInputVal - scaleMinVal))) + 'px';
-	          tempVal = Math.round(pixelPerValue * (maxInputVal - scaleMinVal));
-	          maxSliderHandle.style.left = tempVal + 'px';
-	          sliderConnect.style.right = (sliderBaseWidth - tempVal) + 'px';
+	            ((HUNDREED / diffVal) * (minInputVal - scaleMinVal)).toFixed(0) + PERCENTAGESTRING;
+	          tempVal = ((HUNDREED / diffVal) * (maxInputVal - scaleMinVal));
+	          maxSliderHandle.style.left = tempVal + PERCENTAGESTRING;
+	          sliderConnect.style.right = (HUNDREED - tempVal) + PERCENTAGESTRING;
 	        }
-	        rangeObj = getInputValue();
-	        dataObj.range.activeMin = minInput.value = rangeObj.min;
-	        dataObj.range.activeMax = maxInput.value = rangeObj.max;
+	        setInputValue();
 	        event && (self.applyFilter());
 	      },
 
@@ -535,12 +576,12 @@
 
 	    // Create slider elements
 	    sliderWrapper = self.createElements('div', {
-	      'class': 'fc_ext_filter_slider_wrapper'
+	      CLASS: 'fc_ext_filter_slider_wrapper'
 	    });
 	    parentElement.appendChild(sliderWrapper);
 
 	    inputWrapper = self.createElements('div', {
-	      'class': 'fc_ext_filter_slider_input'
+	      CLASS: 'fc_ext_filter_slider_input'
 	    });
 	    sliderWrapper.appendChild(inputWrapper);
 
@@ -561,45 +602,76 @@
 	    attachInputEvent(maxInput, 'max');
 
 	    sliderBase = self.createElements('div', {
-	      'class': 'fc_ext_filter_slider_base'
+	      CLASS: 'fc_ext_filter_slider_base'
 	    });
 	    sliderWrapper.appendChild(sliderBase);
 
 	    sliderConnect = self.createElements('div', {
-	      'class': 'fc_ext_filter_slider_connect',
-	      'style': 'left: 0px; right: 0px;'
+	      CLASS: 'fc_ext_filter_slider_connect',
+	      'style': 'left: 0%; right: 0%;'
 	    });
 	    sliderBase.appendChild(sliderConnect);
 
 	    minSliderHandle = self.createElements('div', {
-	      'class': 'fc_ext_filter_slider_handle',
-	      'style': 'left: 0px;'
+	      CLASS: 'fc_ext_filter_slider_handle',
+	      'style': 'left: 0%;'
 	    });
 	    sliderBase.appendChild(minSliderHandle);
 	    attachHandlerEvent(minSliderHandle, 'min');
 
 	    maxSliderHandle = self.createElements('div', {
-	      'class': 'fc_ext_filter_slider_handle',
-	      'style': 'left:' + sliderBase.offsetWidth + 'px'
+	      CLASS: 'fc_ext_filter_slider_handle',
+	      'style': 'left: 100%;'
 	    });
 	    sliderBase.appendChild(maxSliderHandle);
 	    attachHandlerEvent(maxSliderHandle, 'max');
 
 	    changeInputHandler();
 
-	    labelWrapper = self.createElements('div', {
-	      'class': 'fc_ext_filter_slider_label'
+	    scaleWrapper = self.createElements('div', {
+	      CLASS: 'fc_ext_filter_slider_scale'
 	    });
-	    sliderWrapper.appendChild(labelWrapper);
+	    sliderBase.appendChild(scaleWrapper);
+
+	    scaleTick = self.createElements('span', {
+	      'style': 'left: 0%'
+	    });
+	    scaleWrapper.appendChild(scaleTick);
+	    stepsPosArr.push(0);
+
+	    if (step) {
+	      for (i = step; i < scaleMaxVal; i += step) {
+	        pos = (HUNDREED / diffVal) * i;
+	        scaleTick = self.createElements('span', {
+	          'style': 'left: ' + pos.toFixed(0) + PERCENTAGESTRING
+	        });
+	        scaleWrapper.appendChild(scaleTick);
+	        stepsPosArr.push(pos);
+	      }
+	    }
+
+	    if (parseInt(scaleTick.style.left) !== HUNDREED) {
+	      scaleTick = self.createElements('span', {
+	        'style': 'left: 100%'
+	      });
+	      scaleWrapper.appendChild(scaleTick);
+	      stepsPosArr.push(HUNDREED);
+	    }
+	    range.stepsPosArr = stepsPosArr;
+
+	    labelWrapper = self.createElements('div', {
+	      CLASS: 'fc_ext_filter_slider_label'
+	    });
+	    sliderBase.appendChild(labelWrapper);
 
 	    minLabel = self.createElements('label', {
-	      'style': 'margin-left: 9px;'
+	      'style': 'float: left;'
 	    });
 	    minLabel.innerHTML = scaleMinVal;
 	    labelWrapper.appendChild(minLabel);
 
 	    maxLabel = self.createElements('label', {
-	      'style': 'float: right; margin-right: 9px;'
+	      'style': 'float: right;'
 	    });
 	    maxLabel.innerHTML = scaleMaxVal;
 	    labelWrapper.appendChild(maxLabel);
@@ -633,8 +705,8 @@
 	    parentContainer.innerHTML = '';
 
 	    wrapper = self.createElements('div', {
-	      'class': 'fc_ext_filter_cont',
-	      'style': 'overflow-y: auto; overflow-x: hidden;'
+	      CLASS: 'fc_ext_filter_cont',
+	      'style': 'overflow-y: scroll; overflow-x: hidden;'
 	    });
 	    wrapper.style.height = parentContainer.offsetHeight + 'px';
 	    parentContainer.appendChild(wrapper);
@@ -652,7 +724,7 @@
 	        wrapper.appendChild(section);
 
 	        cards = self.createElements('div', {
-	          'class': 'fc_ext_filter_card'
+	          CLASS: 'fc_ext_filter_card'
 	        });
 	        section.appendChild(cards);
 
@@ -667,12 +739,12 @@
 	        headerCont.appendChild(label);
 
 	        toggleTool = self.createElements('span', {
-	          'class': 'fc_ext_filter_header_toggle'
+	          CLASS: 'fc_ext_filter_header_toggle'
 	        });
 	        headerCont.appendChild(toggleTool);
 
 	        cardBody = self.createElements('div', {
-	          'class': 'fc_ext_filter_card-body'
+	          CLASS: 'fc_ext_filter_card-body'
 	        });
 	        cards.appendChild(cardBody);
 
@@ -744,7 +816,7 @@
 
 	    if (!self.config.autoApply) {
 	      applyButton = self.createElements('button', {
-	        'class': 'fc_ext_filter_button fc_ext_filter_button_apply'
+	        CLASS: 'fc_ext_filter_button fc_ext_filter_button_apply'
 	      });
 	      applyButton.innerHTML = 'APPLY';
 	      applyButton.onclick = function () {
@@ -754,7 +826,7 @@
 	    }
 
 	    resetButton = self.createElements('button', {
-	      'class': 'fc_ext_filter_button fc_ext_filter_button_reset'
+	      CLASS: 'fc_ext_filter_button fc_ext_filter_button_reset'
 	    });
 	    resetButton.innerHTML = 'RESET';
 	    resetButton.onclick = function () {
