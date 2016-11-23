@@ -38,6 +38,7 @@ class FCDataFilterExt {
    * @param {string} containerId - Defines the container id of control box
    */
   constructor (datastore, userconfig, id) {
+    this.separator = '&*fusioncharts_()76eqw';
     this.multiChart = new MultiCharting();
     this.datastore = datastore;
     this.userconfig = userconfig || {};
@@ -52,7 +53,7 @@ class FCDataFilterExt {
     //     },
     //     'sale': {
     //       step: 2.5,
-    //       decimal: 1,
+    //       decimal: 2,
     //       scaleMin: 1,
     //       scaleMax: 10
     //     }
@@ -61,7 +62,6 @@ class FCDataFilterExt {
 
     this.displayConfig = this.createMenuConfigFromData();
     this.filterVisual = new FilterVisual(this.displayConfig, id, this);
-    this.separator = '&*fusioncharts_()76eqw';
     // data set
   }
 
@@ -104,7 +104,7 @@ class FCDataFilterExt {
           subItem = item.items[j];
           min = item.range.activeMin;
           max = item.range.activeMax;
-          if (includeAll || subItem.value < min || subItem.value > max) {
+          if (includeAll || +subItem.value < min || +subItem.value > max) {
             if (blockList.indexOf(item.field + self.separator + subItem.value) === -1) {
               blockList.push(item.field + self.separator + subItem.value);
             } // end if
@@ -311,9 +311,9 @@ class FCDataFilterExt {
 }
 window.FCDataFilterExt = FCDataFilterExt;
 
-function pluckNumber (val, def) {
+var pluckNumber = (val, def) => {
   if (val === undefined) {
     return def;
   }
   return val;
-}
+};
