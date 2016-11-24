@@ -187,7 +187,7 @@
 	        dataprocessor.filter(this.createFilter(config));
 	      }
 	      // Executing the callback function whenever filter is applied
-	      this.datastore.applyDataProcessor(this.dataprocessor);
+	      this.datastore.addDataProcessor(this.dataprocessor);
 	    }
 	  }, {
 	    key: 'createFilter',
