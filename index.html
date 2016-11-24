@@ -8,12 +8,45 @@
     <link href="https://bootswatch.com/cosmo/bootstrap.min.css" rel="stylesheet">
     <link href="https://rawgit.com/fusioncharts/data-filters/develop/dist/css/styles.css" rel="stylesheet">
     <script src="https://rawgit.com/fusioncharts/multi-charting/develop/out/fusioncharts.multicharting.js"></script>
+    <script src="https://rawgit.com/fusioncharts/multi-charting/develop/src/multicharting.datatable.js"></script>
     <script src="https://rawgit.com/fusioncharts/data-filters/develop/dist/js/data-filter-es6.js"></script>
     <script src="data.js"></script>
   </head>
   <style>
     #filter-container{
       height: 600px;
+    }
+    table.mytable {
+        font-family: verdana,arial,sans-serif;
+        font-size:11px;
+        color:#333333;
+        border-width: 1px;
+        border-color: #999999;
+        border-collapse: collapse;
+    }
+    table.mytable th {
+        background:#b5cfd2;
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #999999;
+    }
+    table.mytable td {
+        background:#dcddc0;
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #999999;
+    }
+    table.mytable td input{
+        text-align: center;
+        border: none;
+        background:#dcddc0;
+    }
+
+    table.mytable td input[type=text]:focus {
+        outline: none;
+        background:#ecedd7;
     }
   </style>
   <body>
