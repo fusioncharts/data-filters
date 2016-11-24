@@ -274,6 +274,9 @@
 	            checked: true
 	          });
 	        }
+	        if (object.items.length > 5) {
+	          object.collapsed = true;
+	        }
 	      } else if (type === 'number') {
 	        // numbers will have range and a value list
 	        object.items = [];
@@ -337,7 +340,7 @@
 	        // setting object properties
 	        selectable = pluckNumber(currentField.selectable, true);
 	        object.visible = pluckNumber(currentField.visible, true);
-	        object.collapsed = pluckNumber(currentField.collapsed, items.length > 5);
+	        object.collapsed = pluckNumber(currentField.collapsed, false);
 	        // setting field properties
 	        if (object.type === 'string') {
 	          for (i = 0, ii = items.length; i < ii; ++i) {
