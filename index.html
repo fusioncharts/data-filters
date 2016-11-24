@@ -5,85 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title></title>
-    <link rel="stylesheet" type="text/css" href="dist/css/styles.css">
+    <link href="https://bootswatch.com/cosmo/bootstrap.min.css" rel="stylesheet">
+    <link href="https://rawgit.com/fusioncharts/data-filters/develop/dist/css/styles.css" rel="stylesheet">
+    <script src="https://rawgit.com/fusioncharts/multi-charting/develop/out/fusioncharts.multicharting.js"></script>
+    <script src="https://rawgit.com/fusioncharts/data-filters/develop/dist/js/data-filter-es6.js"></script>
+    <script src="data.js"></script>
   </head>
+  <style>
+    #filter-container{
+      height: 600px;
+    }
+  </style>
   <body>
-    <div id="chart-container"></div>
-    <script src="lib/fc/fusioncharts.js"></script>
-    <script src="lib/fc/fusioncharts.multicharting.js"></script>
-    <script src="dist/data-filter-es6.min.js"></script>
-    <script src="main.js"></script>
-    <div id="filter-parent" style="width: 300px; height: auto; border: 1px solid black;">
-
-
-      <!-- <div class="fc_ext_filter_cont" style="height: 800px; overflow-y: scroll; overflow-x: hidden;">
-        <section>
-          <div class="fc_ext_filter_card">
-            <header>
-             <input type="checkbox" value="product" id="fc_ext_filter_item_product" disabled="false">
-             <label for="fc_ext_filter_item_product">Product</label>
-            </header>
-            <div class="fc_ext_filter_card-body">
-              <ul>
-                <li>
-                  <input type="checkbox" value="tea" id="fc_ext_filter_item_tea">
-                  <label for="fc_ext_filter_item_tea">Tea</label>
-                </li>
-                 <li>
-                  <input type="checkbox" value="coffee" id="fc_ext_filter_item_coffee">
-                  <label for="fc_ext_filter_item_coffee">Coffee</label>
-                </li>
-                 <li>
-                  <input type="checkbox" value="Soft Drinks" id="fc_ext_filter_item_Soft Drinks">
-                  <label for="fc_ext_filter_item_Soft Drinks">Soft Drinks</label>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </section>
-        <section>
-          <button>Apply</button>
-        </section>
-      </div> -->
-
-      <!-- <div class="fc_ext_filter_cont" style="overflow-y: auto; overflow-x: hidden; height: 540px;">
-        <section>
-            <div class="fc_ext_filter_card">
-                <header>
-                    <div><span>sale</span><span class="fc_ext_filter_header_toggle">[ - ]</span>
-                    </div>
-                </header>
-                <div class="fc_ext_filter_card-body" style="display: block;">
-                    <div class="fc_ext_filter_slider_wrapper">
-                        <div class="fc_ext_filter_slider_input">
-                            <input type="text" value="1" style="margin-left: 9px;">
-                            <input type="text" value="10" style="float: right; margin-right: 9px;">
-                        </div>
-                        <div class="fc_ext_filter_slider_base">
-                            <div class="fc_ext_filter_slider_connect" style="left: 0px; right: 0px;"></div>
-                            <div class="fc_ext_filter_slider_handle" style="left: 0px;"></div>
-                            <div class="fc_ext_filter_slider_handle" style="left:214px;"></div>
-                            <div style="position: relative; top: 12px; height: 5px; width: 100%;">
-                              <span style="position: absolute; left: 0%; display: block; background-color: black; width: 1px; height: 5px;"></span>
-                              <span style="position: absolute; left: 20%; display: block; background-color: black; width: 1px; height: 5px;"></span>
-                              <span style="position: absolute; left: 80%; display: block; background-color: black; width: 1px; height: 5px;"></span>
-                              <span style="position: absolute; left: 100%; display: block; background-color: black; width: 1px; height: 5px;"></span>
-                            </div>
-                            <div class="fc_ext_filter_slider_label" style="padding-top: 15px;">
-                                <label style="float: left; margin-left: -3px;">1</label>
-                                <label style="float: right; margin-right: -6px;">10</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section>
-            <button class="fc_ext_filter_button fc_ext_filter_button_reset">RESET</button>
-        </section>
-      </div> -->
-
-
+    <div class="container">
+      <h2> Data Filter Extension </h2>
+      <div class="row">
+        <div class="col col-md-4" id="filter-container"></div>
+        <div class="col col-md-4" id="table-container"></div>
+      </div>
     </div>
+    <script src="main.js"></script>
   </body>
 </html>
