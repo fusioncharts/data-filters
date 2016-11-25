@@ -40,6 +40,8 @@
   border-top: 1px solid #808585;
   color: #696969;
   font-size: 12px;
+  max-height: 130px;
+  overflow-y: auto;
 }
 
 .fc_ext_filter_card-body ul {
@@ -52,10 +54,12 @@
   margin: 5px;
 }
 
+.fc_ext_filter_card-body::-webkit-scrollbar,
 .fc_ext_filter_cont::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 5px;
 }
+.fc_ext_filter_card-body::-webkit-scrollbar-thumb,
 .fc_ext_filter_cont::-webkit-scrollbar-thumb {
   border-radius: 3px;
   background-color: #808585;
@@ -135,7 +139,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  margin: -7px;
+  /*margin: -6px;*/
   opacity: 0.14;
 }
 
@@ -147,7 +151,7 @@
   border-radius: 3px;
   font-size: 11px;
   cursor: pointer;
-  margin: 0px 5px 15px 0px;
+  margin-bottom: 2px;
 }
 
 .fc_ext_filter_button_apply {

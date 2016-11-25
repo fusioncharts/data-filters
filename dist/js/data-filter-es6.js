@@ -380,7 +380,7 @@
 /***/ function(module, exports) {
 
 	'use strict';
-	const HUNDREED = 100,
+	const HUNDRED = 100,
 	  PERCENTAGESTRING = '%',
 	  CLASS = 'class';
 
@@ -462,8 +462,8 @@
 	        var min,
 	          max;
 
-	        min = (((parseInt(minSliderHandle.style.left) / HUNDREED) * diffVal) + scaleMinVal).toFixed(range.decimal);
-	        max = (((parseInt(maxSliderHandle.style.left) / HUNDREED) * diffVal) + scaleMinVal).toFixed(range.decimal);
+	        min = (((parseInt(minSliderHandle.style.left) / HUNDRED) * diffVal) + scaleMinVal).toFixed(range.decimal);
+	        max = (((parseInt(maxSliderHandle.style.left) / HUNDRED) * diffVal) + scaleMinVal).toFixed(range.decimal);
 	        range.activeMin = minInput.value = min;
 	        range.activeMax = maxInput.value = max;
 	      },
@@ -494,20 +494,20 @@
 
 	            if (type === 'min') {
 	              min = 0;
-	              max = ((parseInt(maxSliderHandle.style.left) / HUNDREED) * sliderBaseWidth) - 10;
+	              max = ((parseInt(maxSliderHandle.style.left) / HUNDRED) * sliderBaseWidth) - 10;
 	            } else {
-	              min = ((parseInt(minSliderHandle.style.left) / HUNDREED) * sliderBaseWidth) + 10;
+	              min = ((parseInt(minSliderHandle.style.left) / HUNDRED) * sliderBaseWidth) + 10;
 	              max = sliderBaseWidth;
 	            }
 
 	            if (left >= min && left <= max) {
-	              leftPos = ((HUNDREED / sliderBaseWidth) * left).toFixed(0);
+	              leftPos = ((HUNDRED / sliderBaseWidth) * left).toFixed(0);
 	              elem.style.left = leftPos + PERCENTAGESTRING;
 
 	              if (type === 'min') {
 	                sliderConnect.style.left = leftPos + PERCENTAGESTRING;
 	              } else {
-	                sliderConnect.style.right = (HUNDREED - leftPos) + PERCENTAGESTRING;
+	                sliderConnect.style.right = (HUNDRED - leftPos) + PERCENTAGESTRING;
 	              }
 
 	              setInputValue();
@@ -525,7 +525,7 @@
 	            if (type === 'min') {
 	              sliderConnect.style.left = closest.toFixed(0) + PERCENTAGESTRING;
 	            } else {
-	              sliderConnect.style.right = (HUNDREED - closest) + PERCENTAGESTRING;
+	              sliderConnect.style.right = (HUNDRED - closest) + PERCENTAGESTRING;
 	            }
 	            setInputValue();
 	          },
@@ -542,7 +542,7 @@
 	                }
 	                self.applyFilter();
 	              };
-	            initX = (parseInt(elem.style.left) / HUNDREED) * sliderBase.offsetWidth;
+	            initX = (parseInt(elem.style.left) / HUNDRED) * sliderBase.offsetWidth;
 	            mousePressX = evnt.touches ? evnt.touches[0].clientX : evnt.clientX;
 	            body.style.cursor = 'pointer';
 	            body.addEventListener('mousemove', moveHandler, false);
@@ -563,10 +563,10 @@
 
 	        if ((minInputVal >= scaleMinVal) && (maxInputVal <= scaleMaxVal) && (minInputVal <= maxInputVal)) {
 	          sliderConnect.style.left = minSliderHandle.style.left =
-	            ((HUNDREED / diffVal) * (minInputVal - scaleMinVal)).toFixed(0) + PERCENTAGESTRING;
-	          tempVal = ((HUNDREED / diffVal) * (maxInputVal - scaleMinVal));
+	            ((HUNDRED / diffVal) * (minInputVal - scaleMinVal)).toFixed(0) + PERCENTAGESTRING;
+	          tempVal = ((HUNDRED / diffVal) * (maxInputVal - scaleMinVal));
 	          maxSliderHandle.style.left = tempVal + PERCENTAGESTRING;
-	          sliderConnect.style.right = (HUNDREED - tempVal) + PERCENTAGESTRING;
+	          sliderConnect.style.right = (HUNDRED - tempVal) + PERCENTAGESTRING;
 	        }
 	        setInputValue();
 	        event && (self.applyFilter());
@@ -644,7 +644,7 @@
 
 	    if (step) {
 	      for (i = step; i < scaleMaxVal; i += step) {
-	        pos = (HUNDREED / diffVal) * i;
+	        pos = (HUNDRED / diffVal) * i;
 	        scaleTick = self.createElements('span', {
 	          'style': 'left: ' + pos.toFixed(0) + PERCENTAGESTRING
 	        });
@@ -653,12 +653,12 @@
 	      }
 	    }
 
-	    if (parseInt(scaleTick.style.left) !== HUNDREED) {
+	    if (parseInt(scaleTick.style.left) !== HUNDRED) {
 	      scaleTick = self.createElements('span', {
 	        'style': 'left: 100%'
 	      });
 	      scaleWrapper.appendChild(scaleTick);
-	      stepsPosArr.push(HUNDREED);
+	      stepsPosArr.push(HUNDRED);
 	    }
 	    range.stepsPosArr = stepsPosArr;
 
@@ -702,7 +702,7 @@
 	      resetButton;
 
 	    if (!parentContainer) {
-	      return;
+	      throw Error('parent conatiner nor found');
 	    }
 
 	    parentContainer.innerHTML = '';
@@ -814,8 +814,11 @@
 	        }
 	      }
 	    }
-	    section = self.createElements('section');
-	    wrapper.appendChild(section);
+	    section = self.createElements('section', {
+	      class: 'fc_ext_filter_cont',
+	      'style': 'margin: 0px;margin-top: -1px; padding: 5px;'
+	    });
+	    parentContainer.appendChild(section);
 
 	    if (!self.config.autoApply) {
 	      applyButton = self.createElements('button', {
