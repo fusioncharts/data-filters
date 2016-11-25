@@ -313,7 +313,6 @@ class FilterVisual {
       section,
       cards,
       label,
-      ul,
       li,
       i,
       j,
@@ -321,7 +320,7 @@ class FilterVisual {
       resetButton;
 
     if (!parentContainer) {
-      throw Error('parent conatiner nor found');
+      throw Error('parent container nor found');
     }
 
     parentContainer.innerHTML = '';
@@ -339,7 +338,9 @@ class FilterVisual {
         cardBody,
         toggleTool,
         headerCont,
-        fieldName = fieldObj.field;
+        ul,
+        fieldName = fieldObj.field,
+        liArr = [];
 
       if (fieldObj.visible) {
         section = self.createElements('section');
@@ -399,7 +400,9 @@ class FilterVisual {
               itemVal = itemObj.value;
 
             li = self.createElements('li');
-            ul.appendChild(li);
+            liArr.push(li);
+            console.log(liArr);
+            debugger;
 
             input = self.createElements('input', {
               'type': 'checkbox',
@@ -428,6 +431,7 @@ class FilterVisual {
               label.style.color = '#bdbdbd';
             }
           }
+          this.manageList(liArr, ul);
         } else {
           self.createSlider(cardBody, fieldObj);
         }
@@ -469,6 +473,22 @@ class FilterVisual {
     if (self.config.autoApply || forceCall) {
       self.filterExt.apply(self.filterState);
     }
+  }
+  // manage
+  manageList (list, container) {
+    let i = 0,
+      ii = 0,
+      listLen = list.length,
+      lim = 5;
+    for (ii = i + lim; i < ii && i < listLen; ++i) {
+      container.appendChild(list[i]);
+    }
+    function scrollHandler (e) {
+      for (ii = i + lim; i < ii && i < listLen; ++i) {
+        container.appendChild(list[i]);
+      }
+    }
+    container.parentElement.addEventListener('scroll', scrollHandler);
   }
 }
 

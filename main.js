@@ -13,5 +13,6 @@ let multicharting = new MultiCharting(),
 		autoApply: false
 	};
 
-datastore.setData({dataSource: data.slice(0, 100)});
+datastore.setData({dataSource: data.slice(0, 1000)});
 filter = new FCDataFilterExt(datastore, config, 'filter-container');
+

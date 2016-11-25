@@ -722,6 +722,8 @@
 	  }, {
 	    key: 'draw',
 	    value: function draw() {
+	      var _this2 = this;
+
 	      var self = this,
 	          filterState = self.filterState,
 	          config = self.config,
@@ -731,7 +733,6 @@
 	          section,
 	          cards,
 	          label,
-	          ul,
 	          li,
 	          i,
 	          j,
@@ -739,7 +740,7 @@
 	          resetButton;
 
 	      if (!parentContainer) {
-	        throw Error('parent conatiner nor found');
+	        throw Error('parent container nor found');
 	      }
 
 	      parentContainer.innerHTML = '';
@@ -757,7 +758,9 @@
 	            cardBody = void 0,
 	            toggleTool = void 0,
 	            headerCont = void 0,
-	            fieldName = fieldObj.field;
+	            ul = void 0,
+	            fieldName = fieldObj.field,
+	            liArr = [];
 
 	        if (fieldObj.visible) {
 	          section = self.createElements('section');
@@ -817,7 +820,9 @@
 	                  itemVal = itemObj.value;
 
 	              li = self.createElements('li');
-	              ul.appendChild(li);
+	              liArr.push(li);
+	              console.log(liArr);
+	              debugger;
 
 	              input = self.createElements('input', {
 	                'type': 'checkbox',
@@ -850,6 +855,7 @@
 	            for (j = 0; j < fieldObj.items.length; j++) {
 	              _loop2();
 	            }
+	            _this2.manageList(liArr, ul);
 	          } else {
 	            self.createSlider(cardBody, fieldObj);
 	          }
@@ -898,6 +904,25 @@
 	      if (self.config.autoApply || forceCall) {
 	        self.filterExt.apply(self.filterState);
 	      }
+	    }
+	    // manage
+
+	  }, {
+	    key: 'manageList',
+	    value: function manageList(list, container) {
+	      var i = 0,
+	          ii = 0,
+	          listLen = list.length,
+	          lim = 5;
+	      for (ii = i + lim; i < ii && i < listLen; ++i) {
+	        container.appendChild(list[i]);
+	      }
+	      function scrollHandler(e) {
+	        for (ii = i + lim; i < ii && i < listLen; ++i) {
+	          container.appendChild(list[i]);
+	        }
+	      }
+	      container.parentElement.addEventListener('scroll', scrollHandler);
 	    }
 	  }]);
 
