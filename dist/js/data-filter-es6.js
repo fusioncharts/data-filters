@@ -782,8 +782,6 @@
 
 	            li = self.createElements('li');
 	            liArr.push(li);
-	            console.log(liArr);
-	            debugger;
 
 	            input = self.createElements('input', {
 	              'type': 'checkbox',
@@ -812,6 +810,7 @@
 	              label.style.color = '#bdbdbd';
 	            }
 	          }
+	          this.manageSearch(liArr, ul);
 	          this.manageList(liArr, ul);
 	        } else {
 	          self.createSlider(cardBody, fieldObj);
@@ -856,20 +855,60 @@
 	    }
 	  }
 	  // manage
-	  manageList (list, container) {
+	  manageList (list, container, noSearch) {
 	    let i = 0,
 	      ii = 0,
+	      j = 0,
+	      jj = 0,
 	      listLen = list.length,
-	      lim = 5;
+	      lim = 5,
+	      blankEl = document.createElement('li'),
+	      children = [].slice.call(container.childNodes, 0);
+	    // Removing prev child nodes if any
+	    for (j = 1, jj = children.length; j < jj; ++j) {
+	      container.removeChild(children[j]);
+	    }
+	    function setBlankHeight () {
+	      var h = 27;
+	      blankEl.style.height = (listLen - i) * h + 'px';
+	    }
 	    for (ii = i + lim; i < ii && i < listLen; ++i) {
 	      container.appendChild(list[i]);
 	    }
+	    container.appendChild(blankEl);
+	    setBlankHeight();
 	    function scrollHandler (e) {
+	      blankEl && container.removeChild(blankEl);
+	      if (i >= listLen) {
+	        container.parentElement.removeEventListener('scroll', scrollHandler);
+	      }
 	      for (ii = i + lim; i < ii && i < listLen; ++i) {
 	        container.appendChild(list[i]);
 	      }
+	      container.appendChild(blankEl);
+	      setBlankHeight();
 	    }
+	    // If called again
+	    container.parentElement.removeEventListener('scroll', scrollHandler);
 	    container.parentElement.addEventListener('scroll', scrollHandler);
+	  }
+	  manageSearch (list, container) {
+	    let self = this,
+	      searchBox = self.createElements('input', {
+	        type: 'text'
+	      });
+	    list = [].slice.call(list, 0);
+	    container.appendChild(searchBox);
+	    searchBox.addEventListener('keyup', function (e) {
+	      let val = ('' + searchBox.value).toLowerCase(),
+	        filteredList = list.filter(function (a) {
+	          if (a && a.firstChild) {
+	            return a.firstChild.value.toLowerCase().indexOf(val) !== -1;
+	          }
+	          return false;
+	        });
+	      self.manageList(filteredList, container);
+	    });
 	  }
 	}
 
