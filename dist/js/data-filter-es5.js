@@ -931,7 +931,7 @@
 	      container.appendChild(blankEl);
 	      setBlankHeight();
 	      function scrollHandler(e) {
-	        blankEl && container.removeChild(blankEl);
+	        blankEl && container.contains(blankEl) && container.removeChild(blankEl);
 	        if (i >= listLen) {
 	          container.parentElement.removeEventListener('scroll', scrollHandler);
 	        }
